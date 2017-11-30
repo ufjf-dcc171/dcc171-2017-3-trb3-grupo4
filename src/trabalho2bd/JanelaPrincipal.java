@@ -9,12 +9,12 @@ package trabalho2bd;
  *
  * @author John
  */
-public class NovoJFrame extends javax.swing.JFrame {
+public class JanelaPrincipal extends javax.swing.JFrame {
 
     /**
      * Creates new form NovoJFrame
      */
-    public NovoJFrame() {
+    public JanelaPrincipal() {
         initComponents();
     }
 
@@ -29,15 +29,15 @@ public class NovoJFrame extends javax.swing.JFrame {
 
         jScrollPane1 = new javax.swing.JScrollPane();
         jTable1 = new javax.swing.JTable();
-        jButton1 = new javax.swing.JButton();
-        jButton2 = new javax.swing.JButton();
-        jButton3 = new javax.swing.JButton();
-        jButton4 = new javax.swing.JButton();
-        jButton5 = new javax.swing.JButton();
-        jButton6 = new javax.swing.JButton();
-        jButton7 = new javax.swing.JButton();
-        jButton8 = new javax.swing.JButton();
-        jButton9 = new javax.swing.JButton();
+        btnPAssociadas = new javax.swing.JButton();
+        btnLstTodas = new javax.swing.JButton();
+        btnLstConcluidas = new javax.swing.JButton();
+        btnLstPendentes = new javax.swing.JButton();
+        btnLstProntas = new javax.swing.JButton();
+        btnPendencias = new javax.swing.JButton();
+        btnEditar = new javax.swing.JButton();
+        btnAddTarefa = new javax.swing.JButton();
+        btnRmvTarefa = new javax.swing.JButton();
         jLabel1 = new javax.swing.JLabel();
         jComboBox1 = new javax.swing.JComboBox<>();
 
@@ -53,23 +53,23 @@ public class NovoJFrame extends javax.swing.JFrame {
         ));
         jScrollPane1.setViewportView(jTable1);
 
-        jButton1.setText("Pessoas Associadas");
+        btnPAssociadas.setText("Pessoas Associadas");
 
-        jButton2.setText("Listar Todas");
+        btnLstTodas.setText("Listar Todas");
 
-        jButton3.setText("Listar Concluidas");
+        btnLstConcluidas.setText("Listar Concluidas");
 
-        jButton4.setText("Listar Pendentes");
+        btnLstPendentes.setText("Listar Pendentes");
 
-        jButton5.setText("Listar Prontas a Iniciar");
+        btnLstProntas.setText("Listar Prontas a Iniciar");
 
-        jButton6.setText("Pendências");
+        btnPendencias.setText("Pendências");
 
-        jButton7.setText("Editar");
+        btnEditar.setText("Editar");
 
-        jButton8.setText("Adicionar Tarefa");
+        btnAddTarefa.setText("Adicionar Tarefa");
 
-        jButton9.setText("Remover Tarefa");
+        btnRmvTarefa.setText("Remover Tarefa");
 
         jLabel1.setText("Projetos:");
 
@@ -88,28 +88,28 @@ public class NovoJFrame extends javax.swing.JFrame {
                             .addGroup(layout.createSequentialGroup()
                                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                                     .addGroup(layout.createSequentialGroup()
-                                        .addComponent(jButton5)
+                                        .addComponent(btnLstProntas)
                                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                                        .addComponent(jButton7))
+                                        .addComponent(btnEditar))
                                     .addGroup(layout.createSequentialGroup()
-                                        .addComponent(jButton4)
+                                        .addComponent(btnLstPendentes)
                                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                                        .addComponent(jButton6)
+                                        .addComponent(btnPendencias)
                                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
-                                        .addComponent(jButton9)))
+                                        .addComponent(btnRmvTarefa)))
                                 .addGap(0, 0, Short.MAX_VALUE)))
                         .addContainerGap())
                     .addGroup(layout.createSequentialGroup()
                         .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                             .addGroup(layout.createSequentialGroup()
                                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
-                                    .addComponent(jButton8, javax.swing.GroupLayout.PREFERRED_SIZE, 127, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                    .addComponent(btnAddTarefa, javax.swing.GroupLayout.PREFERRED_SIZE, 127, javax.swing.GroupLayout.PREFERRED_SIZE)
                                     .addGroup(javax.swing.GroupLayout.Alignment.LEADING, layout.createSequentialGroup()
-                                        .addComponent(jButton3)
+                                        .addComponent(btnLstConcluidas)
                                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                                        .addComponent(jButton2)
+                                        .addComponent(btnLstTodas)
                                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                                        .addComponent(jButton1)))
+                                        .addComponent(btnPAssociadas)))
                                 .addGap(0, 0, Short.MAX_VALUE))
                             .addGroup(layout.createSequentialGroup()
                                 .addComponent(jLabel1)
@@ -126,19 +126,19 @@ public class NovoJFrame extends javax.swing.JFrame {
                     .addComponent(jComboBox1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 11, Short.MAX_VALUE)
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                    .addComponent(jButton3)
-                    .addComponent(jButton2)
-                    .addComponent(jButton1))
+                    .addComponent(btnLstConcluidas)
+                    .addComponent(btnLstTodas)
+                    .addComponent(btnPAssociadas))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                    .addComponent(jButton5)
-                    .addComponent(jButton7)
-                    .addComponent(jButton8))
+                    .addComponent(btnLstProntas)
+                    .addComponent(btnEditar)
+                    .addComponent(btnAddTarefa))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                    .addComponent(jButton4)
-                    .addComponent(jButton6)
-                    .addComponent(jButton9))
+                    .addComponent(btnLstPendentes)
+                    .addComponent(btnPendencias)
+                    .addComponent(btnRmvTarefa))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, 177, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addContainerGap())
@@ -164,34 +164,35 @@ public class NovoJFrame extends javax.swing.JFrame {
                 }
             }
         } catch (ClassNotFoundException ex) {
-            java.util.logging.Logger.getLogger(NovoJFrame.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
+            java.util.logging.Logger.getLogger(JanelaPrincipal.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
         } catch (InstantiationException ex) {
-            java.util.logging.Logger.getLogger(NovoJFrame.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
+            java.util.logging.Logger.getLogger(JanelaPrincipal.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
         } catch (IllegalAccessException ex) {
-            java.util.logging.Logger.getLogger(NovoJFrame.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
+            java.util.logging.Logger.getLogger(JanelaPrincipal.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
         } catch (javax.swing.UnsupportedLookAndFeelException ex) {
-            java.util.logging.Logger.getLogger(NovoJFrame.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
+            java.util.logging.Logger.getLogger(JanelaPrincipal.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
         }
+        //</editor-fold>
         //</editor-fold>
 
         /* Create and display the form */
         java.awt.EventQueue.invokeLater(new Runnable() {
             public void run() {
-                new NovoJFrame().setVisible(true);
+                new JanelaPrincipal().setVisible(true);
             }
         });
     }
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
-    private javax.swing.JButton jButton1;
-    private javax.swing.JButton jButton2;
-    private javax.swing.JButton jButton3;
-    private javax.swing.JButton jButton4;
-    private javax.swing.JButton jButton5;
-    private javax.swing.JButton jButton6;
-    private javax.swing.JButton jButton7;
-    private javax.swing.JButton jButton8;
-    private javax.swing.JButton jButton9;
+    private javax.swing.JButton btnAddTarefa;
+    private javax.swing.JButton btnEditar;
+    private javax.swing.JButton btnLstConcluidas;
+    private javax.swing.JButton btnLstPendentes;
+    private javax.swing.JButton btnLstProntas;
+    private javax.swing.JButton btnLstTodas;
+    private javax.swing.JButton btnPAssociadas;
+    private javax.swing.JButton btnPendencias;
+    private javax.swing.JButton btnRmvTarefa;
     private javax.swing.JComboBox<String> jComboBox1;
     private javax.swing.JLabel jLabel1;
     private javax.swing.JScrollPane jScrollPane1;

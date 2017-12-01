@@ -20,11 +20,8 @@ public class JanelaPrincipal extends javax.swing.JFrame {
     private final conexaoBD BancoDeDados;
     public JanelaPrincipal() throws Exception {
         BancoDeDados = new conexaoBD();
-        List<String> projetos = BancoDeDados.listarProjetosTodos();
-        initComponents();        
-        for (int i = 0; i < projetos.size(); i++) {            
-            cbProjetos.addItem(projetos.get(i));
-        }        
+        initComponents();
+        AtualizaProjetos();
     }
 
     /**
@@ -53,8 +50,10 @@ public class JanelaPrincipal extends javax.swing.JFrame {
         cbProjetos = new javax.swing.JComboBox<>();
         jButton1 = new javax.swing.JButton();
         jButton3 = new javax.swing.JButton();
-        jButton4 = new javax.swing.JButton();
+        btnAdcProjeto = new javax.swing.JButton();
         jButton6 = new javax.swing.JButton();
+        txtProjeto = new javax.swing.JTextField();
+        jLabel2 = new javax.swing.JLabel();
 
         jButton2.setText("jButton2");
 
@@ -102,9 +101,16 @@ public class JanelaPrincipal extends javax.swing.JFrame {
 
         jButton3.setText("Finalizar Tarefa");
 
-        jButton4.setText("Adicionar Projeto");
+        btnAdcProjeto.setText("Adicionar Projeto");
+        btnAdcProjeto.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                btnAdcProjetoActionPerformed(evt);
+            }
+        });
 
         jButton6.setText("Remover Projeto");
+
+        jLabel2.setText("Projeto:");
 
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
         getContentPane().setLayout(layout);
@@ -149,9 +155,15 @@ public class JanelaPrincipal extends javax.swing.JFrame {
                         .addGap(10, 10, 10))
                     .addGroup(layout.createSequentialGroup()
                         .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
-                            .addComponent(jButton4, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                            .addComponent(btnAdcProjeto, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                             .addComponent(jButton6, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                            .addComponent(txtProjeto)
+                            .addGroup(layout.createSequentialGroup()
+                                .addComponent(jLabel2)
+                                .addGap(0, 0, Short.MAX_VALUE)))
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                         .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
                             .addComponent(jButton3, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                             .addComponent(jButton1, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
@@ -183,18 +195,26 @@ public class JanelaPrincipal extends javax.swing.JFrame {
                 .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, 180, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addGap(24, 24, 24)
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                    .addComponent(jButton4)
-                    .addComponent(jButton1))
+                    .addComponent(btnAdcProjeto)
+                    .addComponent(jButton1)
+                    .addComponent(jLabel2))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(jButton6)
-                    .addComponent(jButton3))
+                    .addComponent(jButton3)
+                    .addComponent(txtProjeto, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
                 .addContainerGap())
         );
 
         pack();
     }// </editor-fold>//GEN-END:initComponents
-
+    private void AtualizaProjetos() throws Exception
+    {
+        List<String> projetos = BancoDeDados.listarProjetosTodos();  
+        for (int i = 0; i < projetos.size(); i++) {            
+            cbProjetos.addItem(projetos.get(i));
+        }
+    }
     private void cbProjetosActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_cbProjetosActionPerformed
         
         //List<Tarefa> tarefas = BancoDeDados.listarTarefas(" ");
@@ -203,6 +223,16 @@ public class JanelaPrincipal extends javax.swing.JFrame {
     private void btnLstConcluidasActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnLstConcluidasActionPerformed
         // TODO add your handling code here:
     }//GEN-LAST:event_btnLstConcluidasActionPerformed
+
+    private void btnAdcProjetoActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnAdcProjetoActionPerformed
+        try {
+            String nomeProjeto = this.txtProjeto.getText();
+            this.BancoDeDados.inserirProjeto(nomeProjeto);
+            AtualizaProjetos();
+        } catch (Exception ex) {
+            Logger.getLogger(JanelaPrincipal.class.getName()).log(Level.SEVERE, null, ex);
+        }
+    }//GEN-LAST:event_btnAdcProjetoActionPerformed
 
     /**
      * @param args the command line arguments
@@ -245,6 +275,7 @@ public class JanelaPrincipal extends javax.swing.JFrame {
     }
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
+    private javax.swing.JButton btnAdcProjeto;
     private javax.swing.JButton btnAddTarefa;
     private javax.swing.JButton btnEditar;
     private javax.swing.JButton btnLstConcluidas;
@@ -258,11 +289,12 @@ public class JanelaPrincipal extends javax.swing.JFrame {
     private javax.swing.JButton jButton1;
     private javax.swing.JButton jButton2;
     private javax.swing.JButton jButton3;
-    private javax.swing.JButton jButton4;
     private javax.swing.JButton jButton5;
     private javax.swing.JButton jButton6;
     private javax.swing.JLabel jLabel1;
+    private javax.swing.JLabel jLabel2;
     private javax.swing.JScrollPane jScrollPane1;
     private javax.swing.JTable jTable1;
+    private javax.swing.JTextField txtProjeto;
     // End of variables declaration//GEN-END:variables
 }

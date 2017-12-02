@@ -21,8 +21,8 @@ public class conexaoBD {
 
     private Connection conexao = null;
     private final PreparedStatement InserirProjeto, InserirRequer, InserirTarefa, InserirPessoa;
-    private final PreparedStatement editarTarefaDuracao, editarTarefaPecentual;
-    private final PreparedStatement ListarTarefaTudo, ListarPessoaTudo, ListarProjetoTudo, ListarPendenciaTudo;
+    private final PreparedStatement editarTarefaDuracao, editarTarefaPecentual, editarTarefaDataInicio, editarTarefaDataFim;
+    private final PreparedStatement ListarTarefaTudo, ListarPessoaTudo, ListarProjetoTudo, ListarPendenciaTudo, ListarRequerimento;
     private final PreparedStatement removerProjeto, removerPendecia;
 
     public conexaoBD() throws Exception {
@@ -37,12 +37,15 @@ public class conexaoBD {
         InserirRequer = conexao.prepareStatement("INSERT INTO requer(nome_tarefa, tarefa_requerida) VALUES( ? , ? )");
         removerProjeto = conexao.prepareStatement("DELETE FROM projeto WHERE nome_Projeto = ?");
         removerPendecia = conexao.prepareStatement("DELETE FROM requer WHERE tarefa_requerida = ?");
+        editarTarefaDataInicio = conexao.prepareStatement("UPDATE tarefa SET estado = 'Em andamento', data_inicio = CURRENT_TIMESTAMP  WHERE nome_Tarefa = ?");
+        editarTarefaDataFim = conexao.prepareStatement("UPDATE tarefa SET estado = 'Fechado', data_fim = CURRENT_TIMESTAMP  WHERE nome_Tarefa = ?");
         editarTarefaDuracao = conexao.prepareStatement("UPDATE tarefa SET duracao_esperada = ? WHERE nome_Tarefa = ?");
         editarTarefaPecentual = conexao.prepareStatement("UPDATE tarefa SET percentual_de_andamento = ? WHERE nome_Tarefa = ?");
         ListarTarefaTudo = conexao.prepareStatement("SELECT * FROM tarefa WHERE nome_Projeto = ? ORDER BY nome_Tarefa ASC");
         ListarPessoaTudo = conexao.prepareStatement("SELECT * FROM pessoa WHERE nome_Tarefa = ? ORDER BY nome_Pessoa ASC");
         ListarProjetoTudo = conexao.prepareStatement("SELECT * FROM projeto ORDER BY nome_Projeto ASC");
         ListarPendenciaTudo = conexao.prepareStatement("SELECT * FROM tarefa LEFT JOIN requer ON tarefa.nome_Tarefa = requer.tarefa_requerida WHERE requer.nome_tarefa = ? ");
+        ListarRequerimento = conexao.prepareStatement("SELECT * FROM requer WHERE nome_tarefa = ? AND tarefa_requerida = ? ORDER BY nome_tarefa ASC");
     }
 
     public List<Tarefa> listarTarefas(String nomeProjeto) throws Exception {
@@ -123,19 +126,47 @@ public class conexaoBD {
     }
 
     public void inserirPendencia(String nomeTarefa, String Pendencia) throws Exception {
-        InserirRequer.clearParameters();
-        InserirRequer.setString(1, nomeTarefa);
-        InserirRequer.setString(2, Pendencia);
-        InserirRequer.executeUpdate();
+
+        ListarRequerimento.clearParameters();
+        ListarRequerimento.setString(1, Pendencia);
+        ListarRequerimento.setString(2, nomeTarefa);
+
+        ResultSet resultado = ListarRequerimento.executeQuery();
+        if (!resultado.next()) {
+            InserirRequer.clearParameters();
+            InserirRequer.setString(1, nomeTarefa);
+            InserirRequer.setString(2, Pendencia);
+            InserirRequer.executeUpdate();
+        }
     }
 
+    public void inserirPessoa(String nome_Pessoa, String e_mail, String nomeTarefa) throws Exception {
+
+        InserirPessoa.clearParameters();
+        InserirPessoa.setString(1, nome_Pessoa);
+        InserirPessoa.setString(2, e_mail);
+        InserirPessoa.setString(3, nomeTarefa);
+        InserirPessoa.executeUpdate();
+    }
+
+    public void editarDataIniTarefa(String nomeTarefa) throws Exception {
+        editarTarefaDataInicio.clearParameters();
+        editarTarefaDataInicio.setString(1, nomeTarefa);
+        editarTarefaDataInicio.executeUpdate();
+    }
+    
+    public void editarDataFimTarefa(String nomeTarefa) throws Exception {
+        editarTarefaDataFim.clearParameters();
+        editarTarefaDataFim.setString(1, nomeTarefa);
+        editarTarefaDataFim.executeUpdate();
+    }
+    
     public void editarDuracaoTarefa(String nomeTarefa, int duracaoEsperada) throws Exception {
         editarTarefaDuracao.clearParameters();
         editarTarefaDuracao.setInt(1, duracaoEsperada);
         editarTarefaDuracao.setString(2, nomeTarefa);
         editarTarefaDuracao.executeUpdate();
     }
-
     public void editarPercentualTarefa(String nomeTarefa, int percentualCompleto) throws Exception {
         editarTarefaPecentual.clearParameters();
         editarTarefaPecentual.setInt(1, percentualCompleto);

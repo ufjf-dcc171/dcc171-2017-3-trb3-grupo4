@@ -23,27 +23,28 @@ public class JanelaPendentes extends javax.swing.JFrame {
     private final JanelaPrincipal janelaPrincipal;
     private final conexaoBD bancoDeDados;
     private String nomeTarefa;
-    
-    public JanelaPendentes(JanelaPrincipal janela, conexaoBD banco){
+
+    public JanelaPendentes(JanelaPrincipal janela, conexaoBD banco) {
         this.janelaPrincipal = janela;
         this.bancoDeDados = banco;
         this.nomeTarefa = null;
         initComponents();
     }
-    public void setNomeTarefa(String nomeTarefa) throws Exception{
+
+    public void setNomeTarefa(String nomeTarefa) throws Exception {
         this.nomeTarefa = nomeTarefa;
         AtualizaPendencias();
     }
+
     private void AtualizaPendencias() throws Exception {
-        
+
         DefaultTableModel modelo = (DefaultTableModel) this.tblPendencias.getModel();
         modelo.setRowCount(0);
-        
-        if(nomeTarefa!=null && nomeTarefa.length()>0)
-        {
+
+        if (nomeTarefa != null && nomeTarefa.length() > 0) {
             List<Tarefa> tarefas = bancoDeDados.ListarPendencias(nomeTarefa);
             for (int i = 0; i < tarefas.size(); i++) {
-                
+
                 String nomePendencia = tarefas.get(i).getNome_Tarefa();
                 String estado = tarefas.get(i).getEstado();
                 Timestamp data_inicio = tarefas.get(i).getData_inicio();
@@ -51,12 +52,13 @@ public class JanelaPendentes extends javax.swing.JFrame {
                 System.out.println(nomePendencia + estado + data_inicio + data_fim);
                 int percentual_de_andamento = tarefas.get(i).getPercentual_de_andamento();
                 int duracao_esperada = tarefas.get(i).getDuracao_esperada();
-                
+
                 modelo.addRow(new Object[]{nomePendencia, estado, percentual_de_andamento, data_inicio, data_fim, duracao_esperada});
-                
+
             }
         }
     }
+
     /**
      * This method is called from within the constructor to initialize the form.
      * WARNING: Do NOT modify this code. The content of this method is always
@@ -161,8 +163,7 @@ public class JanelaPendentes extends javax.swing.JFrame {
     private void btnAdcActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnAdcActionPerformed
         try {
             String pendencia = this.txtPendecia.getText();
-            if((pendencia.length()>0) && !(pendencia.equals(nomeTarefa)))
-            {
+            if ((pendencia.length() > 0) && !(pendencia.equals(nomeTarefa))) {
                 bancoDeDados.inserirPendencia(nomeTarefa, pendencia);
                 AtualizaPendencias();
             }
@@ -174,11 +175,10 @@ public class JanelaPendentes extends javax.swing.JFrame {
     private void btnRmvActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnRmvActionPerformed
 
         try {
-            
             String nomePendecia = (String) this.tblPendencias.getValueAt(tblPendencias.getSelectedRow(), 0);
             this.bancoDeDados.removerPendencia(nomePendecia);
             AtualizaPendencias();
-            
+
         } catch (Exception ex) {
             Logger.getLogger(JanelaPrincipal.class.getName()).log(Level.SEVERE, null, ex);
         }

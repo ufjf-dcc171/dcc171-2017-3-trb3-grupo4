@@ -94,6 +94,11 @@ public class JanelaPrincipal extends javax.swing.JFrame {
         });
 
         btnLstCorrentes.setText("Listar Correntes");
+        btnLstCorrentes.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                btnLstCorrentesActionPerformed(evt);
+            }
+        });
 
         btnLstConcluidas.setText("Listar Concluidas");
         btnLstConcluidas.addActionListener(new java.awt.event.ActionListener() {
@@ -301,7 +306,16 @@ public class JanelaPrincipal extends javax.swing.JFrame {
     }//GEN-LAST:event_cbProjetosActionPerformed
 
     private void btnLstConcluidasActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnLstConcluidasActionPerformed
-        // TODO add your handling code here:
+        try {
+            String nomeProjeto = (String) this.cbProjetos.getSelectedItem();
+            this.JTarefas.setListaTarefas(this.BancoDeDados.listarTarefasEstado("concluida", nomeProjeto));
+            this.JTarefas.setTxtEstado("Concluidas:");
+            this.setVisible(false);
+            this.JTarefas.setVisible(true);
+            this.JTarefas.setLocationRelativeTo(null);
+        } catch (Exception ex) {
+            Logger.getLogger(JanelaPrincipal.class.getName()).log(Level.SEVERE, null, ex);
+        }
     }//GEN-LAST:event_btnLstConcluidasActionPerformed
 
     private void btnAdcProjetoActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnAdcProjetoActionPerformed
@@ -392,14 +406,29 @@ public class JanelaPrincipal extends javax.swing.JFrame {
 
     private void btnLstPendentesActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnLstPendentesActionPerformed
         try {
-            this.JTarefas.setListaTarefas(this.BancoDeDados.listarTarefasEstado("pendente"));
+            String nomeProjeto = (String) this.cbProjetos.getSelectedItem();
+            this.JTarefas.setListaTarefas(this.BancoDeDados.listarTarefasEstado("pendente", nomeProjeto));
             this.JTarefas.setTxtEstado("pendentes:");
             this.setVisible(false);
             this.JTarefas.setVisible(true);
+            this.JTarefas.setLocationRelativeTo(null);
         } catch (Exception ex) {
             Logger.getLogger(JanelaPrincipal.class.getName()).log(Level.SEVERE, null, ex);
         }
     }//GEN-LAST:event_btnLstPendentesActionPerformed
+
+    private void btnLstCorrentesActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnLstCorrentesActionPerformed
+        try {
+            String nomeProjeto = (String) this.cbProjetos.getSelectedItem();
+            this.JTarefas.setListaTarefas(this.BancoDeDados.listarTarefasEstado("iniciada", nomeProjeto));
+            this.JTarefas.setTxtEstado("Iniciadas:");
+            this.setVisible(false);
+            this.JTarefas.setVisible(true);
+            this.JTarefas.setLocationRelativeTo(null);
+        } catch (Exception ex) {
+            Logger.getLogger(JanelaPrincipal.class.getName()).log(Level.SEVERE, null, ex);
+        }
+    }//GEN-LAST:event_btnLstCorrentesActionPerformed
 
     /**
      * @param args the command line arguments

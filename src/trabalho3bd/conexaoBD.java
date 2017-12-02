@@ -42,13 +42,13 @@ public class conexaoBD {
         removerProjeto = conexao.prepareStatement("DELETE FROM projeto WHERE nome_Projeto = ?");
         removerPendecia = conexao.prepareStatement("DELETE FROM requer WHERE tarefa_requerida = ?");
 
-        editarTarefaDataInicio = conexao.prepareStatement("UPDATE tarefa SET estado = 'Em andamento', data_inicio = CURRENT_TIMESTAMP  WHERE nome_Tarefa = ?");
-        editarTarefaDataFim = conexao.prepareStatement("UPDATE tarefa SET estado = 'Finalizada', data_fim = CURRENT_TIMESTAMP  WHERE nome_Tarefa = ?");
+        editarTarefaDataInicio = conexao.prepareStatement("UPDATE tarefa SET estado = 'iniciada', data_inicio = CURRENT_TIMESTAMP  WHERE nome_Tarefa = ?");
+        editarTarefaDataFim = conexao.prepareStatement("UPDATE tarefa SET estado = 'concluida', data_fim = CURRENT_TIMESTAMP  WHERE nome_Tarefa = ?");
         editarTarefaDuracao = conexao.prepareStatement("UPDATE tarefa SET duracao_esperada = ? WHERE nome_Tarefa = ?");
         editarTarefaPecentual = conexao.prepareStatement("UPDATE tarefa SET percentual_de_andamento = ? WHERE nome_Tarefa = ?");
 
         ListarTarefaTudo = conexao.prepareStatement("SELECT * FROM tarefa WHERE nome_Projeto = ? ORDER BY nome_Tarefa ASC");
-        ListarTarefaEstado = conexao.prepareStatement("SELECT * FROM tarefa WHERE estado = ? ORDER BY nome_Tarefa ASC");
+        ListarTarefaEstado = conexao.prepareStatement("SELECT * FROM tarefa WHERE estado = ? AND nome_Projeto = ? ORDER BY nome_Tarefa ASC");
         ListarTarefaProntas = conexao.prepareStatement("SELECT * FROM tarefa LEFT JOIN requer ON tarefa.nome_Tarefa = requer.tarefa_requerida WHERE requer.nome_tarefa = ? ");
 
         ListarPessoaTudo = conexao.prepareStatement("SELECT * FROM pessoa WHERE nome_Tarefa = ? ORDER BY nome_Pessoa ASC");
@@ -77,11 +77,12 @@ public class conexaoBD {
         return tarefas;
     }
 
-    public List<Tarefa> listarTarefasEstado(String estado) throws Exception {
+    public List<Tarefa> listarTarefasEstado(String estado, String nomeProjeto) throws Exception {
         List<Tarefa> tarefas = new ArrayList<>();
         ListarTarefaEstado.clearParameters();
         ListarTarefaEstado.setString(1, estado);
-
+        ListarTarefaEstado.setString(2, nomeProjeto);
+        
         ResultSet resultado = ListarTarefaEstado.executeQuery();
         while (resultado.next()) {
             Tarefa novaTarefa = new Tarefa();

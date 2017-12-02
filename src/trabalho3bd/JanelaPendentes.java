@@ -5,6 +5,10 @@
  */
 package trabalho3bd;
 
+import java.sql.Timestamp;
+import java.util.List;
+import javax.swing.table.DefaultTableModel;
+
 /**
  *
  * @author John
@@ -14,10 +18,42 @@ public class JanelaPendentes extends javax.swing.JFrame {
     /**
      * Creates new form JanelaPendetes
      */
-    public JanelaPendentes() {
+    private final JanelaPrincipal janelaPrincipal;
+    private final conexaoBD bancoDeDados;
+    private String nomeTarefa;
+    
+    public JanelaPendentes(JanelaPrincipal janela, conexaoBD banco) throws Exception {
+        this.janelaPrincipal = janela;
+        this.bancoDeDados = banco;
+        this.nomeTarefa = null;
         initComponents();
+        AtualizaPendencias();
     }
-
+    public void setNomeTarefa(String nomeTarefa) {
+        this.nomeTarefa = nomeTarefa;
+    }
+    private void AtualizaPendencias() throws Exception {
+        
+        DefaultTableModel modelo = (DefaultTableModel) this.tblPendencias.getModel();
+        modelo.setRowCount(0);
+        if(nomeTarefa.length()>0)
+        {
+            List<Tarefa> tarefas = bancoDeDados.ListarPendecias(nomeTarefa);
+            for (int i = 0; i < tarefas.size(); i++) {
+                
+                String nomeTarefa = tarefas.get(i).getNome_Tarefa();
+                String estado = tarefas.get(i).getEstado();
+                Timestamp data_inicio = tarefas.get(i).getData_inicio();
+                Timestamp data_fim = tarefas.get(i).getData_fim();
+                
+                int percentual_de_andamento = tarefas.get(i).getPercentual_de_andamento();
+                int duracao_esperada = tarefas.get(i).getDuracao_esperada();
+                
+                modelo.addRow(new Object[]{nomeTarefa, estado, percentual_de_andamento, data_inicio, data_fim, duracao_esperada});
+                
+            }
+        }
+    }
     /**
      * This method is called from within the constructor to initialize the form.
      * WARNING: Do NOT modify this code. The content of this method is always
@@ -30,8 +66,8 @@ public class JanelaPendentes extends javax.swing.JFrame {
         jScrollPane1 = new javax.swing.JScrollPane();
         jTable1 = new javax.swing.JTable();
         jScrollPane2 = new javax.swing.JScrollPane();
-        jTable2 = new javax.swing.JTable();
-        jButton1 = new javax.swing.JButton();
+        tblPendencias = new javax.swing.JTable();
+        btnVoltar = new javax.swing.JButton();
         jButton2 = new javax.swing.JButton();
         jButton3 = new javax.swing.JButton();
 
@@ -47,17 +83,16 @@ public class JanelaPendentes extends javax.swing.JFrame {
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
 
-        jTable2.setModel(new javax.swing.table.DefaultTableModel(
-            new Object [][] {
+        tblPendencias.setModel(new DefaultTableModel(new Object[]{"Nome","Estado","Completo","Data de Inicio", "Data de Conclusão", "Duracao Esperada"},0));
+        tblPendencias.getTableHeader().setReorderingAllowed(false);
+        jScrollPane2.setViewportView(tblPendencias);
 
-            },
-            new String [] {
-                "Nome", "Duração Esperada", "Percentual de andamento", "Estado", "Data de inicio", "Data de conclusão"
+        btnVoltar.setText("voltar");
+        btnVoltar.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                btnVoltarActionPerformed(evt);
             }
-        ));
-        jScrollPane2.setViewportView(jTable2);
-
-        jButton1.setText("voltar");
+        });
 
         jButton2.setText("adicionar");
 
@@ -73,11 +108,11 @@ public class JanelaPendentes extends javax.swing.JFrame {
                     .addComponent(jScrollPane2, javax.swing.GroupLayout.DEFAULT_SIZE, 373, Short.MAX_VALUE)
                     .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
                         .addGap(0, 0, Short.MAX_VALUE)
+                        .addComponent(btnVoltar)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
                         .addComponent(jButton3)
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                        .addComponent(jButton2)
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                        .addComponent(jButton1)))
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                        .addComponent(jButton2)))
                 .addContainerGap())
         );
         layout.setVerticalGroup(
@@ -87,7 +122,7 @@ public class JanelaPendentes extends javax.swing.JFrame {
                 .addComponent(jScrollPane2, javax.swing.GroupLayout.PREFERRED_SIZE, 177, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                    .addComponent(jButton1)
+                    .addComponent(btnVoltar)
                     .addComponent(jButton2)
                     .addComponent(jButton3))
                 .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
@@ -96,49 +131,23 @@ public class JanelaPendentes extends javax.swing.JFrame {
         pack();
     }// </editor-fold>//GEN-END:initComponents
 
+    private void btnVoltarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnVoltarActionPerformed
+        this.setVisible(false);
+        this.janelaPrincipal.setVisible(true);
+    }//GEN-LAST:event_btnVoltarActionPerformed
+
     /**
      * @param args the command line arguments
      */
-    public static void main(String args[]) {
-        /* Set the Nimbus look and feel */
-        //<editor-fold defaultstate="collapsed" desc=" Look and feel setting code (optional) ">
-        /* If Nimbus (introduced in Java SE 6) is not available, stay with the default look and feel.
-         * For details see http://download.oracle.com/javase/tutorial/uiswing/lookandfeel/plaf.html 
-         */
-        try {
-            for (javax.swing.UIManager.LookAndFeelInfo info : javax.swing.UIManager.getInstalledLookAndFeels()) {
-                if ("Nimbus".equals(info.getName())) {
-                    javax.swing.UIManager.setLookAndFeel(info.getClassName());
-                    break;
-                }
-            }
-        } catch (ClassNotFoundException ex) {
-            java.util.logging.Logger.getLogger(JanelaPendentes.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
-        } catch (InstantiationException ex) {
-            java.util.logging.Logger.getLogger(JanelaPendentes.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
-        } catch (IllegalAccessException ex) {
-            java.util.logging.Logger.getLogger(JanelaPendentes.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
-        } catch (javax.swing.UnsupportedLookAndFeelException ex) {
-            java.util.logging.Logger.getLogger(JanelaPendentes.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
-        }
-        //</editor-fold>
-        //</editor-fold>
-
-        /* Create and display the form */
-        java.awt.EventQueue.invokeLater(new Runnable() {
-            public void run() {
-                new JanelaPendentes().setVisible(true);
-            }
-        });
-    }
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
-    private javax.swing.JButton jButton1;
+    private javax.swing.JButton btnVoltar;
     private javax.swing.JButton jButton2;
     private javax.swing.JButton jButton3;
     private javax.swing.JScrollPane jScrollPane1;
     private javax.swing.JScrollPane jScrollPane2;
     private javax.swing.JTable jTable1;
-    private javax.swing.JTable jTable2;
+    private javax.swing.JTable tblPendencias;
     // End of variables declaration//GEN-END:variables
+
 }

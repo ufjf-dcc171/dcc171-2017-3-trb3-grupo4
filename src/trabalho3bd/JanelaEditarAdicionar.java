@@ -149,10 +149,16 @@ public class JanelaEditarAdicionar extends javax.swing.JFrame {
             String nomeNovaTarefa = this.txtNome.getText();
             String duracao = this.txtDuracao.getText();
             String percentual = this.txtPercentual.getText();
-            if (this.nomeProjeto.length() > 0 && nomeNovaTarefa.length() > 0) {
+            if (this.nomeProjeto.length() > 0 && nomeNovaTarefa!=null && nomeNovaTarefa.length() > 0) {
 
                 this.bancoDeDados.inserirTarefa(nomeNovaTarefa, this.nomeProjeto);
-            } else if (this.nomeTarefa.length() > 0) {
+                this.nomeProjeto = null;
+                this.nomeTarefa = null;
+                this.setVisible(false);
+                this.janelaPrincipal.setVisible(true);
+                this.janelaPrincipal.AtualizaTarefa();
+                
+            } else if (this.nomeTarefa!= null && this.nomeTarefa.length() > 0) {
 
                 if (duracao.length() > 0) {
                     int nova_duracao = Integer.parseInt(duracao);
@@ -162,6 +168,11 @@ public class JanelaEditarAdicionar extends javax.swing.JFrame {
                     int novo_percentual = Integer.parseInt(percentual);
                     this.bancoDeDados.editarPercentualTarefa(this.nomeTarefa, novo_percentual);
                 }
+                this.nomeProjeto = null;
+                this.nomeTarefa = null;
+                this.setVisible(false);
+                this.janelaPrincipal.setVisible(true);
+                this.janelaPrincipal.AtualizaTarefa();
             }
         } catch (SQLIntegrityConstraintViolationException ex) {
             JOptionPane.showMessageDialog(null, "Esta ação fere a integridade do Banco", "Erro", JOptionPane.ERROR_MESSAGE);
@@ -169,10 +180,8 @@ public class JanelaEditarAdicionar extends javax.swing.JFrame {
         catch (Exception ex) {
             Logger.getLogger(JanelaPrincipal.class.getName()).log(Level.SEVERE, null, ex);
         }
-        this.nomeProjeto = null;
-        this.nomeTarefa = null;
-        this.setVisible(false);
-        this.janelaPrincipal.setVisible(true);
+        
+
     }//GEN-LAST:event_btnProntoActionPerformed
 
     private void btnVoltarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnVoltarActionPerformed

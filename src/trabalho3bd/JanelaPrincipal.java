@@ -285,7 +285,7 @@ public class JanelaPrincipal extends javax.swing.JFrame {
         pack();
     }// </editor-fold>//GEN-END:initComponents
 
-    public void AtualizaProjetos() throws Exception {
+    private void AtualizaProjetos() throws Exception {
         cbProjetos.removeAllItems();
         List<String> projetos = BancoDeDados.listarProjetosTodos();
         for (int i = 0; i < projetos.size(); i++) {
@@ -297,7 +297,9 @@ public class JanelaPrincipal extends javax.swing.JFrame {
         String nomeProjeto = (String) this.cbProjetos.getSelectedItem();
         DefaultTableModel modelo = (DefaultTableModel) tblTarefas.getModel();
         modelo.setRowCount(0);
-        if (nomeProjeto.length() > 0) {
+        
+        if (nomeProjeto!=null && nomeProjeto.length() > 0) {
+            
             List<Tarefa> tarefas = BancoDeDados.listarTarefas(nomeProjeto);
             for (int i = 0; i < tarefas.size(); i++) {
 

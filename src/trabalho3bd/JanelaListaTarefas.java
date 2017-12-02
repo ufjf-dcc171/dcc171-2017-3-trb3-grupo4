@@ -5,6 +5,11 @@
  */
 package trabalho3bd;
 
+import java.sql.Timestamp;
+import java.util.List;
+import javax.swing.JLabel;
+import javax.swing.table.DefaultTableModel;
+
 /**
  *
  * @author John
@@ -14,8 +19,42 @@ public class JanelaListaTarefas extends javax.swing.JFrame {
     /**
      * Creates new form JanelaListaTarefas
      */
-    public JanelaListaTarefas() {
+    private final JanelaPrincipal janelaPrincipal;
+    private List<Tarefa> listaTarefas;
+
+    public JanelaListaTarefas(JanelaPrincipal janela) {
+        this.janelaPrincipal = janela;
         initComponents();
+    }
+
+    public void setTxtEstado(String txtEstado) {
+        this.txtEstado.setText(txtEstado);
+    }
+
+    public void setListaTarefas(List<Tarefa> listaTarefas) throws Exception {
+        this.listaTarefas = listaTarefas;
+        AtualizaTarefa();
+    }
+
+    private void AtualizaTarefa() throws Exception {
+
+        DefaultTableModel modelo = (DefaultTableModel) tblTarefas.getModel();
+        modelo.setRowCount(0);
+
+        for (int i = 0; i < listaTarefas.size(); i++) {
+
+            String nomeTarefa = listaTarefas.get(i).getNome_Tarefa();
+            String estado = listaTarefas.get(i).getEstado();
+            Timestamp data_inicio = listaTarefas.get(i).getData_inicio();
+            Timestamp data_fim = listaTarefas.get(i).getData_fim();
+
+            int percentual_de_andamento = listaTarefas.get(i).getPercentual_de_andamento();
+            int duracao_esperada = listaTarefas.get(i).getDuracao_esperada();
+
+            modelo.addRow(new Object[]{nomeTarefa, estado, percentual_de_andamento, data_inicio, data_fim, duracao_esperada});
+
+        }
+
     }
 
     /**
@@ -28,16 +67,22 @@ public class JanelaListaTarefas extends javax.swing.JFrame {
     private void initComponents() {
 
         jScrollPane1 = new javax.swing.JScrollPane();
-        jTable1 = new javax.swing.JTable();
+        tblTarefas = new javax.swing.JTable();
         jLabel1 = new javax.swing.JLabel();
         btnVoltar = new javax.swing.JButton();
         txtEstado = new javax.swing.JLabel();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
 
-        jScrollPane1.setViewportView(jTable1);
+        tblTarefas.setModel(new DefaultTableModel(new Object[]{"Nome","Estado","Completo","Data de Inicio", "Data de Conclusão", "Duracao Esperada"},0));
+        jScrollPane1.setViewportView(tblTarefas);
 
         btnVoltar.setText("voltar");
+        btnVoltar.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                btnVoltarActionPerformed(evt);
+            }
+        });
 
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
         getContentPane().setLayout(layout);
@@ -48,16 +93,15 @@ public class JanelaListaTarefas extends javax.swing.JFrame {
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addGroup(layout.createSequentialGroup()
                         .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, 415, javax.swing.GroupLayout.PREFERRED_SIZE)
-                        .addGap(0, 0, Short.MAX_VALUE))
-                    .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
-                        .addGap(0, 0, Short.MAX_VALUE)
-                        .addComponent(btnVoltar))
+                        .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
                     .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
                         .addComponent(txtEstado, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                         .addComponent(jLabel1, javax.swing.GroupLayout.PREFERRED_SIZE, 0, javax.swing.GroupLayout.PREFERRED_SIZE)
-                        .addGap(375, 375, 375)))
-                .addContainerGap())
+                        .addGap(385, 385, 385))
+                    .addGroup(layout.createSequentialGroup()
+                        .addComponent(btnVoltar)
+                        .addGap(0, 0, Short.MAX_VALUE))))
         );
         layout.setVerticalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
@@ -80,46 +124,20 @@ public class JanelaListaTarefas extends javax.swing.JFrame {
         pack();
     }// </editor-fold>//GEN-END:initComponents
 
+    private void btnVoltarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnVoltarActionPerformed
+        this.setVisible(false);
+        this.janelaPrincipal.setVisible(true);
+    }//GEN-LAST:event_btnVoltarActionPerformed
+
     /**
      * @param args the command line arguments
      */
-    public static void main(String args[]) {
-        /* Set the Nimbus look and feel */
-        //<editor-fold defaultstate="collapsed" desc=" Look and feel setting code (optional) ">
-        /* If Nimbus (introduced in Java SE 6) is not available, stay with the default look and feel.
-         * For details see http://download.oracle.com/javase/tutorial/uiswing/lookandfeel/plaf.html 
-         */
-        try {
-            for (javax.swing.UIManager.LookAndFeelInfo info : javax.swing.UIManager.getInstalledLookAndFeels()) {
-                if ("Nimbus".equals(info.getName())) {
-                    javax.swing.UIManager.setLookAndFeel(info.getClassName());
-                    break;
-                }
-            }
-        } catch (ClassNotFoundException ex) {
-            java.util.logging.Logger.getLogger(JanelaListaTarefas.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
-        } catch (InstantiationException ex) {
-            java.util.logging.Logger.getLogger(JanelaListaTarefas.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
-        } catch (IllegalAccessException ex) {
-            java.util.logging.Logger.getLogger(JanelaListaTarefas.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
-        } catch (javax.swing.UnsupportedLookAndFeelException ex) {
-            java.util.logging.Logger.getLogger(JanelaListaTarefas.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
-        }
-        //</editor-fold>
-
-        /* Create and display the form */
-        java.awt.EventQueue.invokeLater(new Runnable() {
-            public void run() {
-                new JanelaListaTarefas().setVisible(true);
-            }
-        });
-    }
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JButton btnVoltar;
     private javax.swing.JLabel jLabel1;
     private javax.swing.JScrollPane jScrollPane1;
-    private javax.swing.JTable jTable1;
+    private javax.swing.JTable tblTarefas;
     private javax.swing.JLabel txtEstado;
     // End of variables declaration//GEN-END:variables
 }

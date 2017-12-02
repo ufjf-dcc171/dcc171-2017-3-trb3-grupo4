@@ -43,7 +43,7 @@ public class conexaoBD {
         removerPendecia = conexao.prepareStatement("DELETE FROM requer WHERE tarefa_requerida = ?");
 
         editarTarefaDataInicio = conexao.prepareStatement("UPDATE tarefa SET estado = 'iniciada', data_inicio = CURRENT_TIMESTAMP  WHERE nome_Tarefa = ?");
-        editarTarefaDataFim = conexao.prepareStatement("UPDATE tarefa SET estado = 'concluida', data_fim = CURRENT_TIMESTAMP  WHERE nome_Tarefa = ?");
+        editarTarefaDataFim = conexao.prepareStatement("UPDATE tarefa SET estado = 'concluida', percentual_de_andamento=100, duracao_esperada =0, data_fim = CURRENT_TIMESTAMP  WHERE nome_Tarefa = ?");
         editarTarefaDuracao = conexao.prepareStatement("UPDATE tarefa SET duracao_esperada = ? WHERE nome_Tarefa = ?");
         editarTarefaPecentual = conexao.prepareStatement("UPDATE tarefa SET percentual_de_andamento = ? WHERE nome_Tarefa = ?");
 

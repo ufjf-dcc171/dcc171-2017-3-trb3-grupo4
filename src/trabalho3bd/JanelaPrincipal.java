@@ -5,11 +5,13 @@
  */
 package trabalho3bd;
 
+import java.sql.SQLIntegrityConstraintViolationException;
 import java.sql.Timestamp;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.logging.Level;
 import java.util.logging.Logger;
+import javax.swing.JOptionPane;
 import javax.swing.table.DefaultTableModel;
 
 /**
@@ -70,8 +72,8 @@ public class JanelaPrincipal extends javax.swing.JFrame {
         btnRmvTarefa = new javax.swing.JButton();
         jLabel1 = new javax.swing.JLabel();
         cbProjetos = new javax.swing.JComboBox<>();
-        jButton1 = new javax.swing.JButton();
-        jButton3 = new javax.swing.JButton();
+        btnIniTarefa = new javax.swing.JButton();
+        btnFinTarefa = new javax.swing.JButton();
         btnAdcProjeto = new javax.swing.JButton();
         btnRmvProjeto = new javax.swing.JButton();
         txtProjeto = new javax.swing.JTextField();
@@ -130,6 +132,11 @@ public class JanelaPrincipal extends javax.swing.JFrame {
         });
 
         btnEditar.setText("Editar");
+        btnEditar.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                btnEditarActionPerformed(evt);
+            }
+        });
 
         btnAddTarefa.setText("Adicionar Tarefa");
         btnAddTarefa.addActionListener(new java.awt.event.ActionListener() {
@@ -153,9 +160,19 @@ public class JanelaPrincipal extends javax.swing.JFrame {
             }
         });
 
-        jButton1.setText("Iniciar Tarefa");
+        btnIniTarefa.setText("Iniciar Tarefa");
+        btnIniTarefa.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                btnIniTarefaActionPerformed(evt);
+            }
+        });
 
-        jButton3.setText("Finalizar Tarefa");
+        btnFinTarefa.setText("Finalizar Tarefa");
+        btnFinTarefa.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                btnFinTarefaActionPerformed(evt);
+            }
+        });
 
         btnAdcProjeto.setText("Adicionar Projeto");
         btnAdcProjeto.addActionListener(new java.awt.event.ActionListener() {
@@ -217,11 +234,11 @@ public class JanelaPrincipal extends javax.swing.JFrame {
                                     .addGroup(layout.createSequentialGroup()
                                         .addComponent(txtProjeto)
                                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                                        .addComponent(jButton3))
+                                        .addComponent(btnFinTarefa))
                                     .addGroup(layout.createSequentialGroup()
                                         .addComponent(jLabel2)
                                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                                        .addComponent(jButton1, javax.swing.GroupLayout.PREFERRED_SIZE, 107, javax.swing.GroupLayout.PREFERRED_SIZE)))))
+                                        .addComponent(btnIniTarefa, javax.swing.GroupLayout.PREFERRED_SIZE, 107, javax.swing.GroupLayout.PREFERRED_SIZE)))))
                         .addGap(10, 10, 10))))
         );
         layout.setVerticalGroup(
@@ -255,11 +272,11 @@ public class JanelaPrincipal extends javax.swing.JFrame {
                     .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                         .addComponent(btnAdcProjeto)
                         .addComponent(jLabel2))
-                    .addComponent(jButton1))
+                    .addComponent(btnIniTarefa))
                 .addGap(6, 6, 6)
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                        .addComponent(jButton3)
+                        .addComponent(btnFinTarefa)
                         .addComponent(txtProjeto, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
                     .addComponent(btnRmvProjeto))
                 .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
@@ -268,7 +285,7 @@ public class JanelaPrincipal extends javax.swing.JFrame {
         pack();
     }// </editor-fold>//GEN-END:initComponents
 
-    private void AtualizaProjetos() throws Exception {
+    public void AtualizaProjetos() throws Exception {
         cbProjetos.removeAllItems();
         List<String> projetos = BancoDeDados.listarProjetosTodos();
         for (int i = 0; i < projetos.size(); i++) {
@@ -276,7 +293,7 @@ public class JanelaPrincipal extends javax.swing.JFrame {
         }
     }
 
-    private void AtualizaTarefa() throws Exception {
+    public void AtualizaTarefa() throws Exception {
         String nomeProjeto = (String) this.cbProjetos.getSelectedItem();
         DefaultTableModel modelo = (DefaultTableModel) tblTarefas.getModel();
         modelo.setRowCount(0);
@@ -330,7 +347,10 @@ public class JanelaPrincipal extends javax.swing.JFrame {
                 this.BancoDeDados.inserirProjeto(nomeProjeto);
                 AtualizaProjetos();
             }
-        } catch (Exception ex) {
+        } catch (SQLIntegrityConstraintViolationException ex) {
+            JOptionPane.showMessageDialog(null, "Esta ação fere a integridade do Banco", "Erro", JOptionPane.ERROR_MESSAGE);
+        }
+        catch (Exception ex) {
             Logger.getLogger(JanelaPrincipal.class.getName()).log(Level.SEVERE, null, ex);
         }
     }//GEN-LAST:event_btnAdcProjetoActionPerformed
@@ -342,19 +362,26 @@ public class JanelaPrincipal extends javax.swing.JFrame {
                 this.BancoDeDados.removerProjeto(nomeProjeto);
                 AtualizaProjetos();
             }
-        } catch (Exception ex) {
+        } catch (SQLIntegrityConstraintViolationException ex) {
+            JOptionPane.showMessageDialog(null, "Esta ação fere a integridade do Banco", "Erro", JOptionPane.ERROR_MESSAGE);
+        }
+        catch (Exception ex) {
             Logger.getLogger(JanelaPrincipal.class.getName()).log(Level.SEVERE, null, ex);
         }
+        
     }//GEN-LAST:event_btnRmvProjetoActionPerformed
 
     private void btnAddTarefaActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnAddTarefaActionPerformed
         try {
-            this.setVisible(false);
+
             String nomeProjeto = (String) this.cbProjetos.getSelectedItem();
-            this.JAdicionar.setNomeProjeto(nomeProjeto);
-            this.JAdicionar.setVisible(true);
-            this.JAdicionar.setLocationRelativeTo(null);
-            AtualizaTarefa();
+            if (nomeProjeto.length() > 0) {
+                this.setVisible(false);
+                this.JAdicionar.setNomeProjeto(nomeProjeto);
+                this.JAdicionar.setVisible(true);
+                this.JAdicionar.setLocationRelativeTo(null);
+                AtualizaTarefa();
+            }
         } catch (Exception ex) {
             Logger.getLogger(JanelaPrincipal.class.getName()).log(Level.SEVERE, null, ex);
         }
@@ -365,11 +392,15 @@ public class JanelaPrincipal extends javax.swing.JFrame {
         try {
             if (IndexLinha >= 0) {
 
-                this.setVisible(false);
                 String nomeTarefa = (String) this.tblTarefas.getValueAt(IndexLinha, 0);
-                this.JPendentes.setNomeTarefa(nomeTarefa);
-                this.JPendentes.setVisible(true);
-                this.JPendentes.setLocationRelativeTo(null);
+                String estado = (String) this.tblTarefas.getValueAt(IndexLinha, 1);
+                if(estado.equals("pendente"))
+                {
+                    this.setVisible(false);
+                    this.JPendentes.setNomeTarefa(nomeTarefa);
+                    this.JPendentes.setVisible(true);
+                    this.JPendentes.setLocationRelativeTo(null);
+                }
 
             }
         } catch (Exception ex) {
@@ -400,11 +431,17 @@ public class JanelaPrincipal extends javax.swing.JFrame {
         try {
             if (indexLinha >= 0) {
                 String nomeTarefa = (String) this.tblTarefas.getValueAt(indexLinha, 0);
-                this.BancoDeDados.removerTarefa(nomeTarefa);
-                AtualizaTarefa();
+                String estado = (String) this.tblTarefas.getValueAt(indexLinha, 1);
+                if (!estado.equals("concluida")) {
+                    this.BancoDeDados.removerTarefa(nomeTarefa);
+                    AtualizaTarefa();
+                }
             }
 
-        } catch (Exception ex) {
+        } catch (SQLIntegrityConstraintViolationException ex) {
+            JOptionPane.showMessageDialog(null, "Esta ação fere a integridade do Banco", "Erro", JOptionPane.ERROR_MESSAGE);
+        }
+        catch (Exception ex) {
             Logger.getLogger(JanelaPrincipal.class.getName()).log(Level.SEVERE, null, ex);
         }
     }//GEN-LAST:event_btnRmvTarefaActionPerformed
@@ -473,6 +510,69 @@ public class JanelaPrincipal extends javax.swing.JFrame {
 
     }//GEN-LAST:event_btnLstProntasActionPerformed
 
+    private void btnEditarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnEditarActionPerformed
+        try {
+            int indexLinha = tblTarefas.getSelectedRow();
+
+            if (indexLinha >= 0) {
+
+                String nomeTarefa = (String) this.tblTarefas.getValueAt(indexLinha, 0);
+                String estado = (String) this.tblTarefas.getValueAt(indexLinha, 1);
+                if (!estado.equals("concluida")) {
+                    this.setVisible(false);
+                    this.JAdicionar.setNomeTarefa(nomeTarefa);
+                    this.JAdicionar.setVisible(true);
+                    this.JAdicionar.setLocationRelativeTo(null);
+                }
+
+            }
+        } catch (Exception ex) {
+            Logger.getLogger(JanelaPrincipal.class.getName()).log(Level.SEVERE, null, ex);
+        }
+    }//GEN-LAST:event_btnEditarActionPerformed
+
+    private void btnIniTarefaActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnIniTarefaActionPerformed
+        try {
+            int indexLinha = tblTarefas.getSelectedRow();
+            List<Tarefa> PendenciasNaoConcluidas;
+
+            if (indexLinha >= 0) {
+
+                String nomeTarefa = (String) this.tblTarefas.getValueAt(indexLinha, 0);
+                String estado = (String) this.tblTarefas.getValueAt(indexLinha, 1);
+
+                PendenciasNaoConcluidas = BancoDeDados.ListarPendenciasPendentes(nomeTarefa);
+
+                if (estado.equals("pendente") && PendenciasNaoConcluidas.size() < 1) {
+                    BancoDeDados.editarDataIniTarefa(nomeTarefa);
+                }
+                AtualizaTarefa();
+            }
+        } catch (Exception ex) {
+            Logger.getLogger(JanelaPrincipal.class.getName()).log(Level.SEVERE, null, ex);
+        }
+    }//GEN-LAST:event_btnIniTarefaActionPerformed
+
+    private void btnFinTarefaActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnFinTarefaActionPerformed
+
+        try {
+            int indexLinha = tblTarefas.getSelectedRow();
+
+            if (indexLinha >= 0) {
+
+                String nomeTarefa = (String) this.tblTarefas.getValueAt(indexLinha, 0);
+                String estado = (String) this.tblTarefas.getValueAt(indexLinha, 1);
+
+                if (estado.equals("iniciada")) {
+                    BancoDeDados.editarDataFimTarefa(nomeTarefa);
+                }
+                AtualizaTarefa();
+            }
+        } catch (Exception ex) {
+            Logger.getLogger(JanelaPrincipal.class.getName()).log(Level.SEVERE, null, ex);
+        }
+    }//GEN-LAST:event_btnFinTarefaActionPerformed
+
     /**
      * @param args the command line arguments
      */
@@ -517,6 +617,8 @@ public class JanelaPrincipal extends javax.swing.JFrame {
     private javax.swing.JButton btnAdcProjeto;
     private javax.swing.JButton btnAddTarefa;
     private javax.swing.JButton btnEditar;
+    private javax.swing.JButton btnFinTarefa;
+    private javax.swing.JButton btnIniTarefa;
     private javax.swing.JButton btnLstConcluidas;
     private javax.swing.JButton btnLstCorrentes;
     private javax.swing.JButton btnLstPendentes;
@@ -526,9 +628,7 @@ public class JanelaPrincipal extends javax.swing.JFrame {
     private javax.swing.JButton btnRmvProjeto;
     private javax.swing.JButton btnRmvTarefa;
     private javax.swing.JComboBox<String> cbProjetos;
-    private javax.swing.JButton jButton1;
     private javax.swing.JButton jButton2;
-    private javax.swing.JButton jButton3;
     private javax.swing.JButton jButton5;
     private javax.swing.JLabel jLabel1;
     private javax.swing.JLabel jLabel2;

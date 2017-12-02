@@ -5,8 +5,10 @@
  */
 package trabalho3bd;
 
+import java.sql.SQLIntegrityConstraintViolationException;
 import java.util.logging.Level;
 import java.util.logging.Logger;
+import javax.swing.JOptionPane;
 
 /**
  *
@@ -19,17 +21,30 @@ public class JanelaEditarAdicionar extends javax.swing.JFrame {
      */
     private final JanelaPrincipal janelaPrincipal;
     private final conexaoBD bancoDeDados;
-    private String nomeProjeto;
-    
+    private String nomeProjeto, nomeTarefa;
+
     public JanelaEditarAdicionar(JanelaPrincipal janela, conexaoBD banco) {
         this.janelaPrincipal = janela;
         this.bancoDeDados = banco;
         this.nomeProjeto = null;
+        this.nomeTarefa = null;
         initComponents();
     }
 
     public void setNomeProjeto(String nomeProjeto) {
         this.nomeProjeto = nomeProjeto;
+        txtNome.setText(null);
+        txtNome.setEditable(true);
+        txtDuracao.setEditable(false);
+        txtPercentual.setEditable(false);
+    }
+
+    public void setNomeTarefa(String nomeTarefa) {
+        this.nomeTarefa = nomeTarefa;
+        txtNome.setText(this.nomeTarefa);
+        txtNome.setEditable(false);
+        txtDuracao.setEditable(true);
+        txtPercentual.setEditable(true);
     }
 
     /**
@@ -129,29 +144,33 @@ public class JanelaEditarAdicionar extends javax.swing.JFrame {
     }// </editor-fold>//GEN-END:initComponents
 
     private void btnProntoActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnProntoActionPerformed
-        
+
         try {
-            String nomeTarefa = this.txtNome.getText();
+            String nomeNovaTarefa = this.txtNome.getText();
             String duracao = this.txtDuracao.getText();
             String percentual = this.txtPercentual.getText();
-            if(this.nomeProjeto.length()>0 && nomeTarefa.length()>0)
-            {
-                this.bancoDeDados.inserirTarefa(nomeTarefa, this.nomeProjeto);
+            if (this.nomeProjeto.length() > 0 && nomeNovaTarefa.length() > 0) {
 
-                if(duracao.length()>0)
-                {
+                this.bancoDeDados.inserirTarefa(nomeNovaTarefa, this.nomeProjeto);
+            } else if (this.nomeTarefa.length() > 0) {
+
+                if (duracao.length() > 0) {
                     int nova_duracao = Integer.parseInt(duracao);
-                    this.bancoDeDados.editarDuracaoTarefa(nomeTarefa, nova_duracao);
+                    this.bancoDeDados.editarDuracaoTarefa(this.nomeTarefa, nova_duracao);
                 }
-                if(percentual.length()>0 && percentual.length()<4)
-                {
+                if (percentual.length() > 0 && percentual.length() < 4) {
                     int novo_percentual = Integer.parseInt(percentual);
-                    this.bancoDeDados.editarPercentualTarefa(nomeTarefa, novo_percentual);
+                    this.bancoDeDados.editarPercentualTarefa(this.nomeTarefa, novo_percentual);
                 }
             }
-        } catch (Exception ex) {
-            Logger.getLogger(JanelaEditarAdicionar.class.getName()).log(Level.SEVERE, null, ex);
+        } catch (SQLIntegrityConstraintViolationException ex) {
+            JOptionPane.showMessageDialog(null, "Esta ação fere a integridade do Banco", "Erro", JOptionPane.ERROR_MESSAGE);
         }
+        catch (Exception ex) {
+            Logger.getLogger(JanelaPrincipal.class.getName()).log(Level.SEVERE, null, ex);
+        }
+        this.nomeProjeto = null;
+        this.nomeTarefa = null;
         this.setVisible(false);
         this.janelaPrincipal.setVisible(true);
     }//GEN-LAST:event_btnProntoActionPerformed

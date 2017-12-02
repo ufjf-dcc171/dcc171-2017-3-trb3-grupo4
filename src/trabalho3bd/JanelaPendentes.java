@@ -5,10 +5,12 @@
  */
 package trabalho3bd;
 
+import java.sql.SQLIntegrityConstraintViolationException;
 import java.sql.Timestamp;
 import java.util.List;
 import java.util.logging.Level;
 import java.util.logging.Logger;
+import javax.swing.JOptionPane;
 import javax.swing.table.DefaultTableModel;
 
 /**
@@ -166,8 +168,11 @@ public class JanelaPendentes extends javax.swing.JFrame {
                 bancoDeDados.inserirPendencia(nomeTarefa, pendencia);
                 AtualizaPendencias();
             }
-        } catch (Exception ex) {
-            Logger.getLogger(JanelaPendentes.class.getName()).log(Level.SEVERE, null, ex);
+        } catch (SQLIntegrityConstraintViolationException ex) {
+            JOptionPane.showMessageDialog(null, "Esta ação fere a integridade do Banco", "Erro", JOptionPane.ERROR_MESSAGE);
+        }
+        catch (Exception ex) {
+            Logger.getLogger(JanelaPrincipal.class.getName()).log(Level.SEVERE, null, ex);
         }
     }//GEN-LAST:event_btnAdcActionPerformed
 
@@ -181,7 +186,10 @@ public class JanelaPendentes extends javax.swing.JFrame {
                 AtualizaPendencias();
             }
 
-        } catch (Exception ex) {
+        } catch (SQLIntegrityConstraintViolationException ex) {
+            JOptionPane.showMessageDialog(null, "Esta ação fere a integridade do Banco", "Erro", JOptionPane.ERROR_MESSAGE);
+        }
+        catch (Exception ex) {
             Logger.getLogger(JanelaPrincipal.class.getName()).log(Level.SEVERE, null, ex);
         }
     }//GEN-LAST:event_btnRmvActionPerformed

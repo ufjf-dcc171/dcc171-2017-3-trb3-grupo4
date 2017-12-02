@@ -23,9 +23,12 @@ public class JanelaPrincipal extends javax.swing.JFrame {
     private final conexaoBD BancoDeDados;
     private final JanelaEditarAdicionar JAdicionar;
     private final JanelaPendentes JPendentes;
+    private final JanelaPessoas JPessoas;
 
     public JanelaPrincipal() throws Exception {
         BancoDeDados = new conexaoBD();
+        JPessoas = new JanelaPessoas(this, this.BancoDeDados);
+        JPessoas.setVisible(false);
         JAdicionar = new JanelaEditarAdicionar(this, this.BancoDeDados);
         JAdicionar.setVisible(false);
         JPendentes = new JanelaPendentes(this, this.BancoDeDados);
@@ -76,6 +79,11 @@ public class JanelaPrincipal extends javax.swing.JFrame {
         jScrollPane1.setViewportView(tblTarefas);
 
         btnPAssociadas.setText("Pessoas Associadas");
+        btnPAssociadas.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                btnPAssociadasActionPerformed(evt);
+            }
+        });
 
         btnLstTodas.setText("Listar Todas");
 
@@ -329,6 +337,23 @@ public class JanelaPrincipal extends javax.swing.JFrame {
             Logger.getLogger(JanelaPrincipal.class.getName()).log(Level.SEVERE, null, ex);
         }
     }//GEN-LAST:event_btnPendenciasActionPerformed
+
+    private void btnPAssociadasActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnPAssociadasActionPerformed
+        int IndexLinha = this.tblTarefas.getSelectedRow();
+        try {
+            if (IndexLinha >= 0) {
+                
+                this.setVisible(false);
+                String nomeTarefa = (String) this.tblTarefas.getValueAt(IndexLinha, 0);
+                this.JPessoas.setNomeTarefa(nomeTarefa);
+                this.JPessoas.setVisible(true);
+                this.JPessoas.setLocationRelativeTo(null);
+                
+            }
+        } catch (Exception ex) {
+            Logger.getLogger(JanelaPrincipal.class.getName()).log(Level.SEVERE, null, ex);
+        }
+    }//GEN-LAST:event_btnPAssociadasActionPerformed
 
     /**
      * @param args the command line arguments

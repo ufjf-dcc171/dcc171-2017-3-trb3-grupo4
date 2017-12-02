@@ -23,7 +23,7 @@ public class conexaoBD {
     private final PreparedStatement InserirProjeto, InserirRequer, InserirTarefa, InserirPessoa;
     private final PreparedStatement editarTarefaDuracao, editarTarefaPecentual, editarTarefaDataInicio, editarTarefaDataFim;
     private final PreparedStatement ListarTarefaTudo, ListarPessoaTudo, ListarProjetoTudo, ListarPendenciaTudo, ListarRequerimento;
-    private final PreparedStatement removerProjeto, removerPendecia;
+    private final PreparedStatement removerProjeto, removerPendecia, removerPessoa;
 
     public conexaoBD() throws Exception {
         if (conexao == null) {
@@ -35,6 +35,7 @@ public class conexaoBD {
         InserirTarefa = conexao.prepareStatement("INSERT INTO tarefa(nome_Projeto, nome_Tarefa, estado) VALUES( ? , ? , 'pendente')");
         InserirPessoa = conexao.prepareStatement("INSERT INTO pessoa(nome_Pessoa, e_mail, nome_Tarefa) VALUES( ? , ? , ? )");
         InserirRequer = conexao.prepareStatement("INSERT INTO requer(nome_tarefa, tarefa_requerida) VALUES( ? , ? )");
+        removerPessoa = conexao.prepareStatement("DELETE FROM pessoa WHERE nome_Pessoa = ?");
         removerProjeto = conexao.prepareStatement("DELETE FROM projeto WHERE nome_Projeto = ?");
         removerPendecia = conexao.prepareStatement("DELETE FROM requer WHERE tarefa_requerida = ?");
         editarTarefaDataInicio = conexao.prepareStatement("UPDATE tarefa SET estado = 'Em andamento', data_inicio = CURRENT_TIMESTAMP  WHERE nome_Tarefa = ?");
@@ -190,5 +191,11 @@ public class conexaoBD {
         removerPendecia.clearParameters();
         removerPendecia.setString(1, pendecia);
         removerPendecia.executeUpdate();
+    }
+
+    public void removerPessoa(String nomePessoa) throws Exception {
+        removerPessoa.clearParameters();
+        removerPessoa.setString(1, nomePessoa);
+        removerPessoa.executeUpdate();
     }
 }

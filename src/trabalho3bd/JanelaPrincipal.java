@@ -23,6 +23,7 @@ public class JanelaPrincipal extends javax.swing.JFrame {
     private final conexaoBD BancoDeDados;
     private final JanelaEditarAdicionar JAdicionar;
     private final JanelaPendentes JPendentes;
+
     public JanelaPrincipal() throws Exception {
         BancoDeDados = new conexaoBD();
         JAdicionar = new JanelaEditarAdicionar(this, this.BancoDeDados);
@@ -71,10 +72,8 @@ public class JanelaPrincipal extends javax.swing.JFrame {
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
 
         tblTarefas.setModel(new DefaultTableModel(new Object[]{"Nome","Estado","Completo","Data de Inicio", "Data de Conclusão", "Duracao Esperada"},0));
-        tblTarefas.setColumnSelectionAllowed(true);
         tblTarefas.getTableHeader().setReorderingAllowed(false);
         jScrollPane1.setViewportView(tblTarefas);
-        tblTarefas.getColumnModel().getSelectionModel().setSelectionMode(javax.swing.ListSelectionModel.SINGLE_SELECTION);
 
         btnPAssociadas.setText("Pessoas Associadas");
 
@@ -237,7 +236,7 @@ public class JanelaPrincipal extends javax.swing.JFrame {
 
         pack();
     }// </editor-fold>//GEN-END:initComponents
-    
+
     private void AtualizaProjetos() throws Exception {
         cbProjetos.removeAllItems();
         List<String> projetos = BancoDeDados.listarProjetosTodos();
@@ -245,30 +244,29 @@ public class JanelaPrincipal extends javax.swing.JFrame {
             cbProjetos.addItem(projetos.get(i));
         }
     }
-    
-    private void AtualizaTarefa() throws Exception{
+
+    private void AtualizaTarefa() throws Exception {
         String nomeProjeto = (String) this.cbProjetos.getSelectedItem();
         DefaultTableModel modelo = (DefaultTableModel) tblTarefas.getModel();
         modelo.setRowCount(0);
-        if(nomeProjeto.length()>0)
-        {
+        if (nomeProjeto.length() > 0) {
             List<Tarefa> tarefas = BancoDeDados.listarTarefas(nomeProjeto);
             for (int i = 0; i < tarefas.size(); i++) {
-                
+
                 String nomeTarefa = tarefas.get(i).getNome_Tarefa();
                 String estado = tarefas.get(i).getEstado();
                 Timestamp data_inicio = tarefas.get(i).getData_inicio();
                 Timestamp data_fim = tarefas.get(i).getData_fim();
-                
+
                 int percentual_de_andamento = tarefas.get(i).getPercentual_de_andamento();
                 int duracao_esperada = tarefas.get(i).getDuracao_esperada();
-                
+
                 modelo.addRow(new Object[]{nomeTarefa, estado, percentual_de_andamento, data_inicio, data_fim, duracao_esperada});
-                
+
             }
         }
     }
-    
+
     private void cbProjetosActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_cbProjetosActionPerformed
 
         try {
@@ -276,7 +274,7 @@ public class JanelaPrincipal extends javax.swing.JFrame {
         } catch (Exception ex) {
             Logger.getLogger(JanelaPrincipal.class.getName()).log(Level.SEVERE, null, ex);
         }
-        
+
     }//GEN-LAST:event_cbProjetosActionPerformed
 
     private void btnLstConcluidasActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnLstConcluidasActionPerformed
@@ -316,11 +314,20 @@ public class JanelaPrincipal extends javax.swing.JFrame {
     }//GEN-LAST:event_btnAddTarefaActionPerformed
 
     private void btnPendenciasActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnPendenciasActionPerformed
-        this.setVisible(false);
-        String nomeTarefa = (String) this.tblTarefas.getValueAt(this.tblTarefas.getSelectedRow(), 1);
-        this.JPendentes.setNomeTarefa(nomeTarefa);
-        this.JPendentes.setVisible(true);
-        this.JPendentes.setLocationRelativeTo(null);
+        int IndexLinha = this.tblTarefas.getSelectedRow();
+        try {
+            if (IndexLinha >= 0) {
+                
+                this.setVisible(false);
+                String nomeTarefa = (String) this.tblTarefas.getValueAt(IndexLinha, 0);
+                this.JPendentes.setNomeTarefa(nomeTarefa);
+                this.JPendentes.setVisible(true);
+                this.JPendentes.setLocationRelativeTo(null);
+                
+            }
+        } catch (Exception ex) {
+            Logger.getLogger(JanelaPrincipal.class.getName()).log(Level.SEVERE, null, ex);
+        }
     }//GEN-LAST:event_btnPendenciasActionPerformed
 
     /**

@@ -22,8 +22,8 @@ public class conexaoBD {
     private Connection conexao = null;
     private final PreparedStatement InserirProjeto, InserirRequer, InserirTarefa, InserirPessoa;
     private final PreparedStatement editarTarefaDuracao, editarTarefaPecentual, editarTarefaDataInicio, editarTarefaDataFim;
-    private final PreparedStatement ListarTarefaTudo, ListarTarefaEstado, ListarTarefaProntas;
-    private final PreparedStatement ListarPessoaTudo, ListarProjetoTudo, ListarPendenciaTudo, ListarRequerimento;
+    private final PreparedStatement ListarTarefaTudo, ListarTarefaEstado;
+    private final PreparedStatement ListarPessoaTudo, ListarProjetoTudo, ListarPendenciaTudo, ListarPendenciasPendentes, ListarRequerimento;
     private final PreparedStatement removerProjeto, removerPendecia, removerTarefa, removerPessoa;
 
     public conexaoBD() throws Exception {
@@ -49,11 +49,12 @@ public class conexaoBD {
 
         ListarTarefaTudo = conexao.prepareStatement("SELECT * FROM tarefa WHERE nome_Projeto = ? ORDER BY nome_Tarefa ASC");
         ListarTarefaEstado = conexao.prepareStatement("SELECT * FROM tarefa WHERE estado = ? AND nome_Projeto = ? ORDER BY nome_Tarefa ASC");
-        ListarTarefaProntas = conexao.prepareStatement("SELECT * FROM tarefa LEFT JOIN requer ON tarefa.nome_Tarefa = requer.tarefa_requerida WHERE requer.nome_tarefa = ? ");
+        //ListarTarefaProntas = conexao.prepareStatement("SELECT * FROM tarefa LEFT JOIN requer ON tarefa.nome_Tarefa = requer.tarefa_requerida WHERE requer.nome_tarefa = ? ");
 
         ListarPessoaTudo = conexao.prepareStatement("SELECT * FROM pessoa WHERE nome_Tarefa = ? ORDER BY nome_Pessoa ASC");
         ListarProjetoTudo = conexao.prepareStatement("SELECT * FROM projeto ORDER BY nome_Projeto ASC");
         ListarPendenciaTudo = conexao.prepareStatement("SELECT * FROM tarefa LEFT JOIN requer ON tarefa.nome_Tarefa = requer.tarefa_requerida WHERE requer.nome_tarefa = ? ");
+        ListarPendenciasPendentes = conexao.prepareStatement("SELECT * FROM tarefa LEFT JOIN requer ON tarefa.nome_Tarefa = requer.tarefa_requerida WHERE requer.nome_tarefa = ? AND tarefa.estado!='concluida'");
         ListarRequerimento = conexao.prepareStatement("SELECT * FROM requer WHERE nome_tarefa = ? AND tarefa_requerida = ? ORDER BY nome_tarefa ASC");
     }
 
@@ -84,26 +85,6 @@ public class conexaoBD {
         ListarTarefaEstado.setString(2, nomeProjeto);
         
         ResultSet resultado = ListarTarefaEstado.executeQuery();
-        while (resultado.next()) {
-            Tarefa novaTarefa = new Tarefa();
-            novaTarefa.setNome_Projeto(resultado.getString(1));
-            novaTarefa.setNome_Tarefa(resultado.getString(2));
-            novaTarefa.setEstado(resultado.getString(3));
-            novaTarefa.setData_inicio(resultado.getTimestamp(4));
-            novaTarefa.setData_fim(resultado.getTimestamp(5));
-            novaTarefa.setPercentual_de_andamento(resultado.getInt(6));
-            novaTarefa.setDuracao_esperada(resultado.getInt(7));
-            tarefas.add(novaTarefa);
-        }
-        return tarefas;
-    }
-
-    public List<Tarefa> listarTarefasProntas(String nomeProjeto) throws Exception {
-        List<Tarefa> tarefas = new ArrayList<>();
-        ListarTarefaTudo.clearParameters();
-        ListarTarefaTudo.setString(1, nomeProjeto);
-
-        ResultSet resultado = ListarTarefaTudo.executeQuery();
         while (resultado.next()) {
             Tarefa novaTarefa = new Tarefa();
             novaTarefa.setNome_Projeto(resultado.getString(1));
@@ -152,6 +133,28 @@ public class conexaoBD {
         ListarPendenciaTudo.setString(1, nomeTarefa);
 
         ResultSet resultado = ListarPendenciaTudo.executeQuery();
+        while (resultado.next()) {
+
+            Tarefa novaTarefa = new Tarefa();
+            novaTarefa.setNome_Projeto(resultado.getString(1));
+            novaTarefa.setNome_Tarefa(resultado.getString(2));
+            novaTarefa.setEstado(resultado.getString(3));
+            novaTarefa.setData_inicio(resultado.getTimestamp(4));
+            novaTarefa.setData_fim(resultado.getTimestamp(5));
+            novaTarefa.setPercentual_de_andamento(resultado.getInt(6));
+            novaTarefa.setDuracao_esperada(resultado.getInt(7));
+            tarefas.add(novaTarefa);
+
+        }
+        return tarefas;
+    }
+    
+    public List<Tarefa> ListarPendenciasPendentes(String nomeTarefa) throws Exception {
+        List<Tarefa> tarefas = new ArrayList<>();
+        ListarPendenciasPendentes.clearParameters();
+        ListarPendenciasPendentes.setString(1, nomeTarefa);
+
+        ResultSet resultado = ListarPendenciasPendentes.executeQuery();
         while (resultado.next()) {
 
             Tarefa novaTarefa = new Tarefa();

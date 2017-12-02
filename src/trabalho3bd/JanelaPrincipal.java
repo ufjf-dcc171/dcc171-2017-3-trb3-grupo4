@@ -6,6 +6,7 @@
 package trabalho3bd;
 
 import java.sql.Timestamp;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.logging.Level;
 import java.util.logging.Logger;
@@ -25,22 +26,22 @@ public class JanelaPrincipal extends javax.swing.JFrame {
     private final JanelaPendentes JPendentes;
     private final JanelaPessoas JPessoas;
     private final JanelaListaTarefas JTarefas;
-    
+
     public JanelaPrincipal() throws Exception {
         BancoDeDados = new conexaoBD();
-        
+
         JTarefas = new JanelaListaTarefas(this);
         JTarefas.setVisible(false);
-        
+
         JPessoas = new JanelaPessoas(this, this.BancoDeDados);
         JPessoas.setVisible(false);
-        
+
         JAdicionar = new JanelaEditarAdicionar(this, this.BancoDeDados);
         JAdicionar.setVisible(false);
-        
+
         JPendentes = new JanelaPendentes(this, this.BancoDeDados);
         JPendentes.setVisible(false);
-        
+
         initComponents();
         AtualizaProjetos();
     }
@@ -115,6 +116,11 @@ public class JanelaPrincipal extends javax.swing.JFrame {
         });
 
         btnLstProntas.setText("Listar Prontas a Iniciar");
+        btnLstProntas.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                btnLstProntasActionPerformed(evt);
+            }
+        });
 
         btnPendencias.setText("Pendências");
         btnPendencias.addActionListener(new java.awt.event.ActionListener() {
@@ -250,15 +256,12 @@ public class JanelaPrincipal extends javax.swing.JFrame {
                         .addComponent(btnAdcProjeto)
                         .addComponent(jLabel2))
                     .addComponent(jButton1))
+                .addGap(6, 6, 6)
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addGroup(layout.createSequentialGroup()
-                        .addGap(6, 6, 6)
-                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                            .addComponent(jButton3)
-                            .addComponent(txtProjeto, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)))
-                    .addGroup(layout.createSequentialGroup()
-                        .addGap(6, 6, 6)
-                        .addComponent(btnRmvProjeto)))
+                    .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                        .addComponent(jButton3)
+                        .addComponent(txtProjeto, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                    .addComponent(btnRmvProjeto))
                 .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
         );
 
@@ -308,11 +311,13 @@ public class JanelaPrincipal extends javax.swing.JFrame {
     private void btnLstConcluidasActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnLstConcluidasActionPerformed
         try {
             String nomeProjeto = (String) this.cbProjetos.getSelectedItem();
-            this.JTarefas.setListaTarefas(this.BancoDeDados.listarTarefasEstado("concluida", nomeProjeto));
-            this.JTarefas.setTxtEstado("Concluidas:");
-            this.setVisible(false);
-            this.JTarefas.setVisible(true);
-            this.JTarefas.setLocationRelativeTo(null);
+            if (nomeProjeto.length() > 0) {
+                this.JTarefas.setListaTarefas(this.BancoDeDados.listarTarefasEstado("concluida", nomeProjeto));
+                this.JTarefas.setTxtEstado("Concluidas:");
+                this.setVisible(false);
+                this.JTarefas.setVisible(true);
+                this.JTarefas.setLocationRelativeTo(null);
+            }
         } catch (Exception ex) {
             Logger.getLogger(JanelaPrincipal.class.getName()).log(Level.SEVERE, null, ex);
         }
@@ -359,13 +364,13 @@ public class JanelaPrincipal extends javax.swing.JFrame {
         int IndexLinha = this.tblTarefas.getSelectedRow();
         try {
             if (IndexLinha >= 0) {
-                
+
                 this.setVisible(false);
                 String nomeTarefa = (String) this.tblTarefas.getValueAt(IndexLinha, 0);
                 this.JPendentes.setNomeTarefa(nomeTarefa);
                 this.JPendentes.setVisible(true);
                 this.JPendentes.setLocationRelativeTo(null);
-                
+
             }
         } catch (Exception ex) {
             Logger.getLogger(JanelaPrincipal.class.getName()).log(Level.SEVERE, null, ex);
@@ -376,13 +381,13 @@ public class JanelaPrincipal extends javax.swing.JFrame {
         int IndexLinha = this.tblTarefas.getSelectedRow();
         try {
             if (IndexLinha >= 0) {
-                
+
                 this.setVisible(false);
                 String nomeTarefa = (String) this.tblTarefas.getValueAt(IndexLinha, 0);
                 this.JPessoas.setNomeTarefa(nomeTarefa);
                 this.JPessoas.setVisible(true);
                 this.JPessoas.setLocationRelativeTo(null);
-                
+
             }
         } catch (Exception ex) {
             Logger.getLogger(JanelaPrincipal.class.getName()).log(Level.SEVERE, null, ex);
@@ -390,7 +395,7 @@ public class JanelaPrincipal extends javax.swing.JFrame {
     }//GEN-LAST:event_btnPAssociadasActionPerformed
 
     private void btnRmvTarefaActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnRmvTarefaActionPerformed
-        
+
         int indexLinha = tblTarefas.getSelectedRow();
         try {
             if (indexLinha >= 0) {
@@ -407,11 +412,14 @@ public class JanelaPrincipal extends javax.swing.JFrame {
     private void btnLstPendentesActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnLstPendentesActionPerformed
         try {
             String nomeProjeto = (String) this.cbProjetos.getSelectedItem();
-            this.JTarefas.setListaTarefas(this.BancoDeDados.listarTarefasEstado("pendente", nomeProjeto));
-            this.JTarefas.setTxtEstado("pendentes:");
-            this.setVisible(false);
-            this.JTarefas.setVisible(true);
-            this.JTarefas.setLocationRelativeTo(null);
+
+            if (nomeProjeto.length() > 0) {
+                this.JTarefas.setListaTarefas(this.BancoDeDados.listarTarefasEstado("pendente", nomeProjeto));
+                this.JTarefas.setTxtEstado("pendentes:");
+                this.setVisible(false);
+                this.JTarefas.setVisible(true);
+                this.JTarefas.setLocationRelativeTo(null);
+            }
         } catch (Exception ex) {
             Logger.getLogger(JanelaPrincipal.class.getName()).log(Level.SEVERE, null, ex);
         }
@@ -420,15 +428,50 @@ public class JanelaPrincipal extends javax.swing.JFrame {
     private void btnLstCorrentesActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnLstCorrentesActionPerformed
         try {
             String nomeProjeto = (String) this.cbProjetos.getSelectedItem();
-            this.JTarefas.setListaTarefas(this.BancoDeDados.listarTarefasEstado("iniciada", nomeProjeto));
-            this.JTarefas.setTxtEstado("Iniciadas:");
-            this.setVisible(false);
-            this.JTarefas.setVisible(true);
-            this.JTarefas.setLocationRelativeTo(null);
+            if (nomeProjeto.length() > 0) {
+                this.JTarefas.setListaTarefas(this.BancoDeDados.listarTarefasEstado("iniciada", nomeProjeto));
+                this.JTarefas.setTxtEstado("Iniciadas:");
+                this.setVisible(false);
+                this.JTarefas.setVisible(true);
+                this.JTarefas.setLocationRelativeTo(null);
+            }
         } catch (Exception ex) {
             Logger.getLogger(JanelaPrincipal.class.getName()).log(Level.SEVERE, null, ex);
         }
     }//GEN-LAST:event_btnLstCorrentesActionPerformed
+
+    private void btnLstProntasActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnLstProntasActionPerformed
+
+        String nomeProjeto = (String) cbProjetos.getSelectedItem();
+        String nomeTarefa;
+        List<Tarefa> tarefas, PendenciasNaoConcluidas;
+        List<Tarefa> TarefasProntasInciar = new ArrayList<>();
+        try {
+
+            if (nomeProjeto.length() > 0) {
+
+                tarefas = BancoDeDados.listarTarefasEstado("pendente", nomeProjeto);
+                for (int i = 0; i < tarefas.size(); i++) {
+
+                    nomeTarefa = tarefas.get(i).getNome_Tarefa();
+                    PendenciasNaoConcluidas = BancoDeDados.ListarPendenciasPendentes(nomeTarefa);
+
+                    if (PendenciasNaoConcluidas.size() < 1) {
+                        TarefasProntasInciar.add(tarefas.get(i));
+                    }
+                }
+                this.JTarefas.setListaTarefas(TarefasProntasInciar);
+                this.JTarefas.setTxtEstado("Tarefas Prontas Para Iniciar:");
+                this.setVisible(false);
+                this.JTarefas.setVisible(true);
+                this.JTarefas.setLocationRelativeTo(null);
+            }
+
+        } catch (Exception ex) {
+            Logger.getLogger(JanelaPrincipal.class.getName()).log(Level.SEVERE, null, ex);
+        }
+
+    }//GEN-LAST:event_btnLstProntasActionPerformed
 
     /**
      * @param args the command line arguments

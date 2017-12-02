@@ -49,7 +49,6 @@ public class JanelaPendentes extends javax.swing.JFrame {
                 String estado = tarefas.get(i).getEstado();
                 Timestamp data_inicio = tarefas.get(i).getData_inicio();
                 Timestamp data_fim = tarefas.get(i).getData_fim();
-                System.out.println(nomePendencia + estado + data_inicio + data_fim);
                 int percentual_de_andamento = tarefas.get(i).getPercentual_de_andamento();
                 int duracao_esperada = tarefas.get(i).getDuracao_esperada();
 

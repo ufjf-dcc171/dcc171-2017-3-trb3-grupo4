@@ -154,10 +154,10 @@ public class JanelaPessoas extends javax.swing.JFrame {
     }//GEN-LAST:event_btnVoltarActionPerformed
 
     private void btnRmvActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnRmvActionPerformed
-
+        int indexLinha = this.tblPessoas.getSelectedRow();
         try {
-            String nomePessoa = (String) this.tblPessoas.getValueAt(tblPessoas.getSelectedRow(), 0);
-            if (nomePessoa.length() > 0) {
+            if (indexLinha >= 0) {
+                String nomePessoa = (String) this.tblPessoas.getValueAt(indexLinha, 0);
                 this.bancoDeDados.removerPessoa(nomePessoa);
                 AtualizaPessoas();
             }

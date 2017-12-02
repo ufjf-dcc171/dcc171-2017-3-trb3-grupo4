@@ -22,8 +22,9 @@ public class conexaoBD {
     private Connection conexao = null;
     private final PreparedStatement InserirProjeto, InserirRequer, InserirTarefa, InserirPessoa;
     private final PreparedStatement editarTarefaDuracao, editarTarefaPecentual, editarTarefaDataInicio, editarTarefaDataFim;
-    private final PreparedStatement ListarTarefaTudo, ListarPessoaTudo, ListarProjetoTudo, ListarPendenciaTudo, ListarRequerimento;
-    private final PreparedStatement removerProjeto, removerPendecia, removerPessoa;
+    private final PreparedStatement ListarTarefaTudo, ListarTarefaEstado, ListarTarefaProntas;
+    private final PreparedStatement ListarPessoaTudo, ListarProjetoTudo, ListarPendenciaTudo, ListarRequerimento;
+    private final PreparedStatement removerProjeto, removerPendecia, removerTarefa, removerPessoa;
 
     public conexaoBD() throws Exception {
         if (conexao == null) {
@@ -35,14 +36,21 @@ public class conexaoBD {
         InserirTarefa = conexao.prepareStatement("INSERT INTO tarefa(nome_Projeto, nome_Tarefa, estado) VALUES( ? , ? , 'pendente')");
         InserirPessoa = conexao.prepareStatement("INSERT INTO pessoa(nome_Pessoa, e_mail, nome_Tarefa) VALUES( ? , ? , ? )");
         InserirRequer = conexao.prepareStatement("INSERT INTO requer(nome_tarefa, tarefa_requerida) VALUES( ? , ? )");
+        
+        removerTarefa = conexao.prepareStatement("DELETE FROM tarefa WHERE nome_Tarefa = ?"); 
         removerPessoa = conexao.prepareStatement("DELETE FROM pessoa WHERE nome_Pessoa = ?");
         removerProjeto = conexao.prepareStatement("DELETE FROM projeto WHERE nome_Projeto = ?");
         removerPendecia = conexao.prepareStatement("DELETE FROM requer WHERE tarefa_requerida = ?");
+        
         editarTarefaDataInicio = conexao.prepareStatement("UPDATE tarefa SET estado = 'Em andamento', data_inicio = CURRENT_TIMESTAMP  WHERE nome_Tarefa = ?");
         editarTarefaDataFim = conexao.prepareStatement("UPDATE tarefa SET estado = 'Fechado', data_fim = CURRENT_TIMESTAMP  WHERE nome_Tarefa = ?");
         editarTarefaDuracao = conexao.prepareStatement("UPDATE tarefa SET duracao_esperada = ? WHERE nome_Tarefa = ?");
         editarTarefaPecentual = conexao.prepareStatement("UPDATE tarefa SET percentual_de_andamento = ? WHERE nome_Tarefa = ?");
+        
         ListarTarefaTudo = conexao.prepareStatement("SELECT * FROM tarefa WHERE nome_Projeto = ? ORDER BY nome_Tarefa ASC");
+        ListarTarefaEstado = conexao.prepareStatement("SELECT * FROM tarefa WHERE estado = ? ORDER BY nome_Tarefa ASC");
+        ListarTarefaProntas = conexao.prepareStatement("SELECT * FROM tarefa LEFT JOIN requer ON tarefa.nome_Tarefa = requer.tarefa_requerida WHERE requer.nome_tarefa = ? ");
+                
         ListarPessoaTudo = conexao.prepareStatement("SELECT * FROM pessoa WHERE nome_Tarefa = ? ORDER BY nome_Pessoa ASC");
         ListarProjetoTudo = conexao.prepareStatement("SELECT * FROM projeto ORDER BY nome_Projeto ASC");
         ListarPendenciaTudo = conexao.prepareStatement("SELECT * FROM tarefa LEFT JOIN requer ON tarefa.nome_Tarefa = requer.tarefa_requerida WHERE requer.nome_tarefa = ? ");
@@ -68,7 +76,82 @@ public class conexaoBD {
         }
         return tarefas;
     }
+    public List<Tarefa> listarTarefasConcluidas(String nomeProjeto) throws Exception {
+        List<Tarefa> tarefas = new ArrayList<>();
+        ListarTarefaTudo.clearParameters();
+        ListarTarefaTudo.setString(1, nomeProjeto);
 
+        ResultSet resultado = ListarTarefaTudo.executeQuery();
+        while (resultado.next()) {
+            Tarefa novaTarefa = new Tarefa();
+            novaTarefa.setNome_Projeto(resultado.getString(1));
+            novaTarefa.setNome_Tarefa(resultado.getString(2));
+            novaTarefa.setEstado(resultado.getString(3));
+            novaTarefa.setData_inicio(resultado.getTimestamp(4));
+            novaTarefa.setData_fim(resultado.getTimestamp(5));
+            novaTarefa.setPercentual_de_andamento(resultado.getInt(6));
+            novaTarefa.setDuracao_esperada(resultado.getInt(7));
+            tarefas.add(novaTarefa);
+        }
+        return tarefas;
+    }
+    public List<Tarefa> listarTarefasPendetes(String nomeProjeto) throws Exception {
+        List<Tarefa> tarefas = new ArrayList<>();
+        ListarTarefaTudo.clearParameters();
+        ListarTarefaTudo.setString(1, nomeProjeto);
+
+        ResultSet resultado = ListarTarefaTudo.executeQuery();
+        while (resultado.next()) {
+            Tarefa novaTarefa = new Tarefa();
+            novaTarefa.setNome_Projeto(resultado.getString(1));
+            novaTarefa.setNome_Tarefa(resultado.getString(2));
+            novaTarefa.setEstado(resultado.getString(3));
+            novaTarefa.setData_inicio(resultado.getTimestamp(4));
+            novaTarefa.setData_fim(resultado.getTimestamp(5));
+            novaTarefa.setPercentual_de_andamento(resultado.getInt(6));
+            novaTarefa.setDuracao_esperada(resultado.getInt(7));
+            tarefas.add(novaTarefa);
+        }
+        return tarefas;
+    }
+    public List<Tarefa> listarTarefasProntas(String nomeProjeto) throws Exception {
+        List<Tarefa> tarefas = new ArrayList<>();
+        ListarTarefaTudo.clearParameters();
+        ListarTarefaTudo.setString(1, nomeProjeto);
+
+        ResultSet resultado = ListarTarefaTudo.executeQuery();
+        while (resultado.next()) {
+            Tarefa novaTarefa = new Tarefa();
+            novaTarefa.setNome_Projeto(resultado.getString(1));
+            novaTarefa.setNome_Tarefa(resultado.getString(2));
+            novaTarefa.setEstado(resultado.getString(3));
+            novaTarefa.setData_inicio(resultado.getTimestamp(4));
+            novaTarefa.setData_fim(resultado.getTimestamp(5));
+            novaTarefa.setPercentual_de_andamento(resultado.getInt(6));
+            novaTarefa.setDuracao_esperada(resultado.getInt(7));
+            tarefas.add(novaTarefa);
+        }
+        return tarefas;
+    }
+    public List<Tarefa> listarTarefasCorrentes(String nomeProjeto) throws Exception {
+        List<Tarefa> tarefas = new ArrayList<>();
+        ListarTarefaTudo.clearParameters();
+        ListarTarefaTudo.setString(1, nomeProjeto);
+
+        ResultSet resultado = ListarTarefaTudo.executeQuery();
+        while (resultado.next()) {
+            Tarefa novaTarefa = new Tarefa();
+            novaTarefa.setNome_Projeto(resultado.getString(1));
+            novaTarefa.setNome_Tarefa(resultado.getString(2));
+            novaTarefa.setEstado(resultado.getString(3));
+            novaTarefa.setData_inicio(resultado.getTimestamp(4));
+            novaTarefa.setData_fim(resultado.getTimestamp(5));
+            novaTarefa.setPercentual_de_andamento(resultado.getInt(6));
+            novaTarefa.setDuracao_esperada(resultado.getInt(7));
+            tarefas.add(novaTarefa);
+        }
+        return tarefas;
+    }
     public List<String> listarProjetosTodos() throws Exception {
         List<String> projetos = new ArrayList<>();
         ListarProjetoTudo.clearParameters();
@@ -141,6 +224,12 @@ public class conexaoBD {
         }
     }
 
+    public void inserirProjeto(String nomeProjeto) throws Exception {
+        InserirProjeto.clearParameters();
+        InserirProjeto.setString(1, nomeProjeto);
+        InserirProjeto.executeUpdate();
+    }
+
     public void inserirPessoa(String nome_Pessoa, String e_mail, String nomeTarefa) throws Exception {
 
         InserirPessoa.clearParameters();
@@ -155,30 +244,25 @@ public class conexaoBD {
         editarTarefaDataInicio.setString(1, nomeTarefa);
         editarTarefaDataInicio.executeUpdate();
     }
-    
+
     public void editarDataFimTarefa(String nomeTarefa) throws Exception {
         editarTarefaDataFim.clearParameters();
         editarTarefaDataFim.setString(1, nomeTarefa);
         editarTarefaDataFim.executeUpdate();
     }
-    
+
     public void editarDuracaoTarefa(String nomeTarefa, int duracaoEsperada) throws Exception {
         editarTarefaDuracao.clearParameters();
         editarTarefaDuracao.setInt(1, duracaoEsperada);
         editarTarefaDuracao.setString(2, nomeTarefa);
         editarTarefaDuracao.executeUpdate();
     }
+
     public void editarPercentualTarefa(String nomeTarefa, int percentualCompleto) throws Exception {
         editarTarefaPecentual.clearParameters();
         editarTarefaPecentual.setInt(1, percentualCompleto);
         editarTarefaPecentual.setString(2, nomeTarefa);
         editarTarefaPecentual.executeUpdate();
-    }
-
-    public void inserirProjeto(String nomeProjeto) throws Exception {
-        InserirProjeto.clearParameters();
-        InserirProjeto.setString(1, nomeProjeto);
-        InserirProjeto.executeUpdate();
     }
 
     public void removerProjeto(String nomeProjeto) throws Exception {
@@ -192,7 +276,13 @@ public class conexaoBD {
         removerPendecia.setString(1, pendecia);
         removerPendecia.executeUpdate();
     }
-
+    
+    public void removerTarefa(String nomeTarefa) throws Exception {
+        removerTarefa.clearParameters();
+        removerTarefa.setString(1, nomeTarefa);
+        removerTarefa.executeUpdate();
+    }
+    
     public void removerPessoa(String nomePessoa) throws Exception {
         removerPessoa.clearParameters();
         removerPessoa.setString(1, nomePessoa);

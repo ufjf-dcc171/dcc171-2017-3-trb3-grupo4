@@ -174,10 +174,13 @@ public class JanelaPendentes extends javax.swing.JFrame {
 
     private void btnRmvActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnRmvActionPerformed
 
+        int indexLinha = tblPendencias.getSelectedRow();
         try {
-            String nomePendecia = (String) this.tblPendencias.getValueAt(tblPendencias.getSelectedRow(), 0);
-            this.bancoDeDados.removerPendencia(nomePendecia);
-            AtualizaPendencias();
+            if (indexLinha >= 0) {
+                String nomePendecia = (String) this.tblPendencias.getValueAt(indexLinha, 0);
+                this.bancoDeDados.removerPendencia(nomePendecia);
+                AtualizaPendencias();
+            }
 
         } catch (Exception ex) {
             Logger.getLogger(JanelaPrincipal.class.getName()).log(Level.SEVERE, null, ex);

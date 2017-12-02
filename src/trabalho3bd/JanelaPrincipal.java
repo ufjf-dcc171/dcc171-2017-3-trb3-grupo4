@@ -51,7 +51,7 @@ public class JanelaPrincipal extends javax.swing.JFrame {
         jScrollPane1 = new javax.swing.JScrollPane();
         tblTarefas = new javax.swing.JTable();
         btnPAssociadas = new javax.swing.JButton();
-        btnLstTodas = new javax.swing.JButton();
+        btnLstCorrentes = new javax.swing.JButton();
         btnLstConcluidas = new javax.swing.JButton();
         btnLstPendentes = new javax.swing.JButton();
         btnLstProntas = new javax.swing.JButton();
@@ -85,7 +85,7 @@ public class JanelaPrincipal extends javax.swing.JFrame {
             }
         });
 
-        btnLstTodas.setText("Listar Todas");
+        btnLstCorrentes.setText("Listar Correntes");
 
         btnLstConcluidas.setText("Listar Concluidas");
         btnLstConcluidas.addActionListener(new java.awt.event.ActionListener() {
@@ -115,6 +115,11 @@ public class JanelaPrincipal extends javax.swing.JFrame {
         });
 
         btnRmvTarefa.setText("Remover Tarefa");
+        btnRmvTarefa.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                btnRmvTarefaActionPerformed(evt);
+            }
+        });
 
         jLabel1.setText("Projetos:");
 
@@ -166,7 +171,7 @@ public class JanelaPrincipal extends javax.swing.JFrame {
                             .addGroup(layout.createSequentialGroup()
                                 .addComponent(btnLstConcluidas)
                                 .addGap(6, 6, 6)
-                                .addComponent(btnLstTodas)
+                                .addComponent(btnLstCorrentes)
                                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                                 .addComponent(btnPAssociadas, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
                             .addGroup(layout.createSequentialGroup()
@@ -175,27 +180,25 @@ public class JanelaPrincipal extends javax.swing.JFrame {
                                 .addComponent(btnEditar)
                                 .addGap(10, 10, 10)
                                 .addComponent(btnAddTarefa, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
-                            .addGroup(layout.createSequentialGroup()
-                                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                                    .addGroup(layout.createSequentialGroup()
-                                        .addComponent(jLabel1)
-                                        .addGap(4, 4, 4)
-                                        .addComponent(cbProjetos, javax.swing.GroupLayout.PREFERRED_SIZE, 295, javax.swing.GroupLayout.PREFERRED_SIZE))
-                                    .addGroup(layout.createSequentialGroup()
-                                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                                            .addComponent(btnAdcProjeto)
-                                            .addComponent(btnRmvProjeto, javax.swing.GroupLayout.PREFERRED_SIZE, 115, javax.swing.GroupLayout.PREFERRED_SIZE))
-                                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
-                                            .addGroup(layout.createSequentialGroup()
-                                                .addComponent(txtProjeto)
-                                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                                                .addComponent(jButton3))
-                                            .addGroup(layout.createSequentialGroup()
-                                                .addComponent(jLabel2)
-                                                .addGap(78, 78, 78)
-                                                .addComponent(jButton1, javax.swing.GroupLayout.PREFERRED_SIZE, 107, javax.swing.GroupLayout.PREFERRED_SIZE)))))
-                                .addGap(0, 0, Short.MAX_VALUE)))
+                            .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                                .addGroup(layout.createSequentialGroup()
+                                    .addComponent(jLabel1)
+                                    .addGap(4, 4, 4)
+                                    .addComponent(cbProjetos, javax.swing.GroupLayout.PREFERRED_SIZE, 295, javax.swing.GroupLayout.PREFERRED_SIZE))
+                                .addGroup(layout.createSequentialGroup()
+                                    .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                                        .addComponent(btnAdcProjeto)
+                                        .addComponent(btnRmvProjeto, javax.swing.GroupLayout.PREFERRED_SIZE, 115, javax.swing.GroupLayout.PREFERRED_SIZE))
+                                    .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                                    .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                                        .addGroup(layout.createSequentialGroup()
+                                            .addComponent(txtProjeto)
+                                            .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                                            .addComponent(jButton3))
+                                        .addGroup(layout.createSequentialGroup()
+                                            .addComponent(jLabel2)
+                                            .addGap(80, 80, 80)
+                                            .addComponent(jButton1, javax.swing.GroupLayout.PREFERRED_SIZE, 107, javax.swing.GroupLayout.PREFERRED_SIZE))))))
                         .addGap(10, 10, 10))))
         );
         layout.setVerticalGroup(
@@ -210,7 +213,7 @@ public class JanelaPrincipal extends javax.swing.JFrame {
                 .addGap(6, 6, 6)
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addComponent(btnLstConcluidas)
-                    .addComponent(btnLstTodas)
+                    .addComponent(btnLstCorrentes)
                     .addComponent(btnPAssociadas))
                 .addGap(11, 11, 11)
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
@@ -225,20 +228,20 @@ public class JanelaPrincipal extends javax.swing.JFrame {
                 .addGap(6, 6, 6)
                 .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, 180, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addGap(24, 24, 24)
-                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
-                    .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                         .addComponent(btnAdcProjeto)
-                        .addComponent(jButton1))
-                    .addComponent(jLabel2))
+                        .addComponent(jLabel2))
+                    .addComponent(jButton1))
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addGroup(layout.createSequentialGroup()
                         .addGap(6, 6, 6)
-                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                            .addComponent(btnRmvProjeto)
-                            .addComponent(jButton3)))
+                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                            .addComponent(jButton3)
+                            .addComponent(txtProjeto, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)))
                     .addGroup(layout.createSequentialGroup()
-                        .addGap(7, 7, 7)
-                        .addComponent(txtProjeto, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)))
+                        .addGap(6, 6, 6)
+                        .addComponent(btnRmvProjeto)))
                 .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
         );
 
@@ -355,6 +358,21 @@ public class JanelaPrincipal extends javax.swing.JFrame {
         }
     }//GEN-LAST:event_btnPAssociadasActionPerformed
 
+    private void btnRmvTarefaActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnRmvTarefaActionPerformed
+        
+        int indexLinha = tblTarefas.getSelectedRow();
+        try {
+            if (indexLinha >= 0) {
+                String nomeTarefa = (String) this.tblTarefas.getValueAt(indexLinha, 0);
+                this.BancoDeDados.removerTarefa(nomeTarefa);
+                AtualizaTarefa();
+            }
+
+        } catch (Exception ex) {
+            Logger.getLogger(JanelaPrincipal.class.getName()).log(Level.SEVERE, null, ex);
+        }
+    }//GEN-LAST:event_btnRmvTarefaActionPerformed
+
     /**
      * @param args the command line arguments
      */
@@ -400,9 +418,9 @@ public class JanelaPrincipal extends javax.swing.JFrame {
     private javax.swing.JButton btnAddTarefa;
     private javax.swing.JButton btnEditar;
     private javax.swing.JButton btnLstConcluidas;
+    private javax.swing.JButton btnLstCorrentes;
     private javax.swing.JButton btnLstPendentes;
     private javax.swing.JButton btnLstProntas;
-    private javax.swing.JButton btnLstTodas;
     private javax.swing.JButton btnPAssociadas;
     private javax.swing.JButton btnPendencias;
     private javax.swing.JButton btnRmvProjeto;
